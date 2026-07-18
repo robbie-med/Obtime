@@ -1,42 +1,88 @@
 @import 'tailwindcss';
 
-/* --- Design tokens: calm clinical palette --- */
+/* ------------------------------------------------------------------ */
+/*  Design tokens — warm plum + neutral, with a full dark theme.       */
+/*  Components use semantic utilities (bg-surface, text-ink, …); the    */
+/*  .dark class below re-points the same variables. No dark: variants   */
+/*  needed anywhere in the component tree.                              */
+/* ------------------------------------------------------------------ */
 @theme {
   --font-sans: 'Pretendard', 'Pretendard Variable', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+    'Segoe UI', 'Noto Sans KR', Roboto, sans-serif;
 
-  --color-brand-50: #eef6f6;
-  --color-brand-100: #d6eaea;
-  --color-brand-200: #aed6d6;
-  --color-brand-300: #7bbcbc;
-  --color-brand-400: #4c9d9d;
-  --color-brand-500: #2f8080;
-  --color-brand-600: #236767;
-  --color-brand-700: #1d5252;
-  --color-brand-800: #1a4242;
-  --color-brand-900: #173636;
+  /* surfaces & text (light) */
+  --color-canvas: #f5f1ee;
+  --color-surface: #fffdfb;
+  --color-surface2: #ece5e2;
+  --color-ink: #251f27;
+  --color-muted: #6d636e;
+  --color-faint: #a79eaa;
+  --color-line: #e5dcde;
 
-  --color-rose-accent: #d98a9e;
-  --color-us: #3b6fb0;
-  --color-kr: #c0473f;
+  /* brand / primary (light) */
+  --color-primary: #8a4d6a;
+  --color-primaryhover: #713c56;
+  --color-primarysoft: #f2e6ec;
+  --color-onprimary: #fffafc;
+  --color-accentink: #8a4d6a;
+
+  /* highlight accent (kept name rose-accent for existing utilities) */
+  --color-rose-accent: #c76f8f;
+
+  /* country coding */
+  --color-us: #3f6db0;
+  --color-kr: #c04a42;
+}
+
+/* Dark theme: re-point the same tokens. */
+.dark {
+  --color-canvas: #141017;
+  --color-surface: #1e1922;
+  --color-surface2: #2a2431;
+  --color-ink: #ece6ef;
+  --color-muted: #a99fb1;
+  --color-faint: #6f6578;
+  --color-line: #342c3c;
+
+  --color-primary: #a85d80;
+  --color-primaryhover: #b96e91;
+  --color-primarysoft: #2c2331;
+  --color-onprimary: #fffafc;
+  --color-accentink: #e0a1c0;
+
+  --color-rose-accent: #d98aa8;
+
+  --color-us: #7aa4de;
+  --color-kr: #e5766d;
 }
 
 html {
   scroll-behavior: smooth;
+  background: var(--color-canvas);
 }
 
 body {
-  @apply bg-brand-50 text-slate-800 antialiased;
-  font-feature-settings: 'tnum' 0;
+  @apply bg-canvas text-ink antialiased;
 }
 
-/* Language-aware line breaking: Korean text should not break mid-word awkwardly */
+::selection {
+  background: var(--color-primary);
+  color: var(--color-onprimary);
+}
+
+/* Korean text should wrap by word, not mid-syllable-block. */
 :lang(ko) {
   word-break: keep-all;
   line-break: strict;
 }
 
-/* --- Print: only the targeted print view shows --- */
+/* Subtle custom scrollbar in dark for the timeline scroll areas. */
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-surface2);
+  border-radius: 9999px;
+}
+
+/* --- Print --- */
 @media print {
   body {
     background: white;
@@ -51,7 +97,6 @@ body {
     page-break-after: always;
   }
 }
-
 .print-only {
   display: none;
 }

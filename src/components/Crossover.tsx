@@ -32,7 +32,7 @@ export function Crossover() {
       <SectionCard
         title={
           <span className="inline-flex items-center gap-2">
-            <Plane size={18} className="text-brand-600" />
+            <Plane size={18} className="text-accentink" />
             {lang === 'en' ? 'Flying to Korea to deliver' : '한국에서 분만하기 위해 출국하기'}
           </span>
         }
@@ -43,8 +43,8 @@ export function Crossover() {
         }
       >
         {/* Optional: when do you plan to fly? */}
-        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl bg-brand-50 p-3">
-          <label className="text-sm font-medium text-brand-700">
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl bg-primarysoft p-3">
+          <label className="text-sm font-medium text-accentink">
             {lang === 'en' ? 'I plan to fly at (weeks):' : '출국 예정 주수:'}
           </label>
           <input
@@ -55,11 +55,11 @@ export function Crossover() {
             onChange={(e) =>
               update({ flyGa: e.target.value ? Number(e.target.value) : undefined })
             }
-            className="w-20 rounded-lg border border-brand-200 bg-white px-2 py-1 text-sm"
+            className="w-20 rounded-lg border border-line bg-surface px-2 py-1 text-sm"
             placeholder="—"
           />
           {profile.flyGa != null && ga && (
-            <span className="text-sm text-slate-600">
+            <span className="text-sm text-muted">
               {profile.flyGa > ga.weeks
                 ? lang === 'en'
                   ? `about ${profile.flyGa - ga.weeks} weeks from now`
@@ -83,9 +83,9 @@ export function Crossover() {
         </div>
 
         {/* Travel timing guidance */}
-        <div className="rounded-xl border border-brand-100 p-4">
-          <h3 className="text-sm font-semibold text-brand-800">{tc(TRAVEL_TIMING.title)}</h3>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-600">
+        <div className="rounded-xl border border-line p-4">
+          <h3 className="text-sm font-semibold text-ink">{tc(TRAVEL_TIMING.title)}</h3>
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">
             {TRAVEL_TIMING.points.map((p, i) => (
               <li key={i}>{tc(p)}</li>
             ))}
@@ -106,20 +106,20 @@ export function Crossover() {
           <ol className="space-y-3">
             {byPhase(phase).map((step, i) => (
               <li key={step.id} className="flex gap-3">
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
                   {i + 1}
                 </span>
                 <div>
-                  <div className="text-sm font-semibold text-slate-800">
+                  <div className="text-sm font-semibold text-ink">
                     {tc(step.title)}
                     {step.timing && (
-                      <span className="ml-2 rounded bg-brand-50 px-1.5 py-0.5 text-[11px] font-medium text-brand-600">
+                      <span className="ml-2 rounded bg-primarysoft px-1.5 py-0.5 text-[11px] font-medium text-accentink">
                         {tc(step.timing)}
                       </span>
                     )}
                     <SourceBadges ids={step.sourceIds} />
                   </div>
-                  <p className="mt-0.5 text-sm text-slate-600">{tc(step.detail)}</p>
+                  <p className="mt-0.5 text-sm text-muted">{tc(step.detail)}</p>
                 </div>
               </li>
             ))}

@@ -12,7 +12,7 @@ export function Compare() {
   const { t, lang, mode } = useUi()
   return (
     <div className="space-y-6">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-muted">
         {lang === 'en'
           ? 'These tables show both English and Korean side by side, so you can share them with a provider in either country.'
           : '이 표는 영어와 한국어를 나란히 보여주므로 양국 어느 병원에서든 함께 볼 수 있습니다.'}
@@ -22,7 +22,7 @@ export function Compare() {
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="border-b border-brand-100 text-left text-xs uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
                   <th className="w-1/4 py-2 pr-3 font-semibold">{t('topicCol')}</th>
                   <th className="py-2 pr-3 font-semibold" style={{ color: 'var(--color-us)' }}>
                     {t('usCol')}
@@ -34,18 +34,18 @@ export function Compare() {
               </thead>
               <tbody>
                 {section.rows.map((row) => (
-                  <tr key={row.id} className="border-b border-brand-50 align-top">
-                    <td className="py-3 pr-3 font-medium text-brand-800">
+                  <tr key={row.id} className="border-b border-line align-top">
+                    <td className="py-3 pr-3 font-medium text-ink">
                       <BilingualLead node={row.topic} lead={lang} />
                       <SourceBadges ids={row.sourceIds} />
                     </td>
-                    <td className="py-3 pr-3 text-slate-700">
+                    <td className="py-3 pr-3 text-ink">
                       <BilingualCell node={row.us} lead={lang} />
                     </td>
-                    <td className="py-3 text-slate-700">
+                    <td className="py-3 text-ink">
                       <BilingualCell node={row.kr} lead={lang} />
                       {mode === 'clinician' && row.clinicianNote && (
-                        <p className="mt-2 rounded bg-brand-50 px-2 py-1 text-xs text-brand-700">
+                        <p className="mt-2 rounded bg-primarysoft px-2 py-1 text-xs text-accentink">
                           <span className="font-semibold">{t('clinicianDetail')}: </span>
                           {row.clinicianNote[lang]}
                         </p>
@@ -67,7 +67,7 @@ function BilingualLead({ node, lead }: { node: Bilingual; lead: 'en' | 'ko' }) {
   return (
     <span>
       <span>{node[lead]}</span>{' '}
-      <span className="text-xs font-normal text-slate-400">{node[sub]}</span>
+      <span className="text-xs font-normal text-faint">{node[sub]}</span>
     </span>
   )
 }
@@ -77,7 +77,7 @@ function BilingualCell({ node, lead }: { node: Bilingual; lead: 'en' | 'ko' }) {
   return (
     <div>
       <div>{node[lead]}</div>
-      <div className="mt-0.5 text-xs text-slate-400">{node[sub]}</div>
+      <div className="mt-0.5 text-xs text-faint">{node[sub]}</div>
     </div>
   )
 }

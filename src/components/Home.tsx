@@ -34,7 +34,7 @@ export function Home({ onNavigate }: { onNavigate: (id: string) => void }) {
       {!hasProfile && <Onboard />}
 
       <div>
-        <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted">
           <BookOpen size={16} /> {lang === 'en' ? 'Explore' : '둘러보기'}
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -42,14 +42,14 @@ export function Home({ onNavigate }: { onNavigate: (id: string) => void }) {
             <button
               key={q.id}
               onClick={() => onNavigate(q.id)}
-              className="flex items-start gap-3 rounded-2xl border border-brand-100 bg-white/80 p-4 text-left transition hover:border-brand-300 hover:shadow-sm"
+              className="flex items-start gap-3 rounded-2xl border border-line bg-surface/80 p-4 text-left transition hover:border-primary hover:shadow-sm"
             >
-              <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+              <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primarysoft text-accentink">
                 {q.icon}
               </span>
               <span>
-                <span className="block font-semibold text-brand-800">{t(q.label)}</span>
-                <span className="block text-sm text-slate-500">
+                <span className="block font-semibold text-ink">{t(q.label)}</span>
+                <span className="block text-sm text-muted">
                   {lang === 'en' ? q.blurbEn : q.blurbKo}
                 </span>
               </span>
@@ -66,13 +66,13 @@ export function Home({ onNavigate }: { onNavigate: (id: string) => void }) {
 function Intro() {
   const { lang } = useUi()
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-brand-600 to-brand-800 p-6 text-white sm:p-8">
+    <div className="rounded-2xl bg-gradient-to-br from-primary to-primaryhover p-6 text-white sm:p-8">
       <h1 className="text-2xl font-bold sm:text-3xl">
         {lang === 'en'
           ? 'Prenatal care across two countries, in two languages.'
           : '두 나라, 두 언어로 함께하는 산전 관리.'}
       </h1>
-      <p className="mt-3 max-w-2xl text-brand-50">
+      <p className="mt-3 max-w-2xl text-onprimary">
         {lang === 'en'
           ? 'Machung helps Korean-American mothers understand and compare prenatal care in the US and Korea — whether you deliver here, fly back to Korea, or are still deciding. Enter your due date below to personalize everything.'
           : '마중은 재미 한인 엄마들이 미국과 한국의 산전 관리를 이해하고 비교하도록 돕습니다 — 미국에서 분만하든, 한국으로 돌아가든, 아직 고민 중이든. 아래에 예정일을 입력하면 모든 내용이 맞춤화됩니다.'}

@@ -23,7 +23,7 @@ export function RedFlags() {
               'rounded-lg border p-3',
               f.urgent
                 ? 'border-rose-accent/40 bg-rose-accent/5'
-                : 'border-brand-100 bg-white',
+                : 'border-line bg-surface',
             )}
           >
             <div className="flex items-start gap-2">
@@ -31,8 +31,8 @@ export function RedFlags() {
                 <AlertTriangle size={16} className="mt-0.5 shrink-0 text-rose-accent" />
               )}
               <div>
-                <p className="text-sm font-medium text-slate-800">{tc(f.sign)}</p>
-                <p className="mt-0.5 text-sm text-slate-500">{tc(f.action)}</p>
+                <p className="text-sm font-medium text-ink">{tc(f.sign)}</p>
+                <p className="mt-0.5 text-sm text-muted">{tc(f.action)}</p>
               </div>
             </div>
           </li>

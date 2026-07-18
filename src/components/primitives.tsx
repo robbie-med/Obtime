@@ -24,7 +24,7 @@ export function SectionCard({
     <section
       id={id}
       className={clsx(
-        'rounded-2xl border border-brand-100 bg-white/80 p-5 shadow-sm sm:p-6',
+        'rounded-2xl border border-line bg-surface/80 p-5 shadow-sm sm:p-6',
         className,
       )}
     >
@@ -32,10 +32,10 @@ export function SectionCard({
         <header className="mb-4 flex items-start justify-between gap-4">
           <div>
             {title && (
-              <h2 className="text-lg font-semibold text-brand-800">{title}</h2>
+              <h2 className="text-lg font-semibold text-ink">{title}</h2>
             )}
             {subtitle && (
-              <p className="mt-1 text-sm text-slate-500">{subtitle}</p>
+              <p className="mt-1 text-sm text-muted">{subtitle}</p>
             )}
           </div>
           {right && <div className="shrink-0">{right}</div>}
@@ -62,7 +62,7 @@ export function SourceBadges({ ids }: { ids?: string[] }) {
             target="_blank"
             rel="noreferrer"
             title={`${s.org} — ${s.label[lang]}`}
-            className="rounded bg-brand-50 px-1.5 py-0.5 text-[10px] font-medium text-brand-600 ring-1 ring-brand-100 hover:bg-brand-100"
+            className="rounded bg-primarysoft px-1.5 py-0.5 text-[10px] font-medium text-accentink ring-1 ring-line hover:bg-primarysoft"
           >
             {s.org}
           </a>
@@ -74,8 +74,8 @@ export function SourceBadges({ ids }: { ids?: string[] }) {
 
 const STATUS_STYLES: Record<EventStatus, string> = {
   due: 'bg-rose-accent/15 text-rose-accent ring-rose-accent/30',
-  upcoming: 'bg-brand-50 text-brand-600 ring-brand-100',
-  past: 'bg-slate-100 text-slate-400 ring-slate-200',
+  upcoming: 'bg-primarysoft text-accentink ring-line',
+  past: 'bg-surface2 text-faint ring-line',
 }
 
 export function StatusPill({

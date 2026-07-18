@@ -27,7 +27,7 @@ export function Checklist() {
   if (!ga) {
     return (
       <div className="space-y-4">
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted">
           {lang === 'en'
             ? 'Set your due date to build a personalized checklist of labs, scans, and vaccines.'
             : '예정일을 입력하면 검사·초음파·예방접종 맞춤 체크리스트가 만들어집니다.'}
@@ -58,7 +58,7 @@ export function Checklist() {
             <div key={status}>
               <div className="mb-2 flex items-center gap-2">
                 <StatusPill status={status}>{t(GROUP_LABEL[status])}</StatusPill>
-                <span className="text-xs text-slate-400">{groups[status].length}</span>
+                <span className="text-xs text-faint">{groups[status].length}</span>
               </div>
               <ul className="space-y-1.5">
                 {groups[status].map((ev) => {
@@ -70,25 +70,25 @@ export function Checklist() {
                         className={clsx(
                           'flex w-full items-center gap-3 rounded-lg border px-3 py-2 text-left transition',
                           checked
-                            ? 'border-brand-200 bg-brand-50'
-                            : 'border-brand-100 bg-white hover:bg-brand-50/50',
+                            ? 'border-line bg-primarysoft'
+                            : 'border-line bg-surface hover:bg-surface2',
                         )}
                       >
                         {checked ? (
-                          <CheckCircle2 size={18} className="shrink-0 text-brand-600" />
+                          <CheckCircle2 size={18} className="shrink-0 text-accentink" />
                         ) : (
-                          <Circle size={18} className="shrink-0 text-slate-300" />
+                          <Circle size={18} className="shrink-0 text-faint" />
                         )}
                         <CountryTag country={ev.country} />
                         <span
                           className={clsx(
                             'flex-1 text-sm',
-                            checked ? 'text-slate-400 line-through' : 'text-slate-700',
+                            checked ? 'text-faint line-through' : 'text-ink',
                           )}
                         >
                           {tc(ev.title)}
                         </span>
-                        <span className="text-xs text-slate-400">{formatWindow(ev.window)}</span>
+                        <span className="text-xs text-faint">{formatWindow(ev.window)}</span>
                       </button>
                     </li>
                   )

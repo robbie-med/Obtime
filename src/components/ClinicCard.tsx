@@ -40,7 +40,7 @@ export function ClinicCard() {
       <SectionCard
         title={
           <span className="inline-flex items-center gap-2">
-            <Languages size={18} className="text-brand-600" />
+            <Languages size={18} className="text-accentink" />
             {lang === 'en' ? 'Clinic card' : '진료 카드'}
           </span>
         }
@@ -52,7 +52,7 @@ export function ClinicCard() {
         right={
           <button
             onClick={() => window.print()}
-            className="no-print inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-sm font-medium text-brand-700 hover:bg-brand-50"
+            className="no-print inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-sm font-medium text-accentink hover:bg-surface2"
           >
             <Printer size={15} />
             {t('printCard')}
@@ -62,20 +62,20 @@ export function ClinicCard() {
         <div className="space-y-4">
           {categories.map((cat) => (
             <div key={cat}>
-              <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted">
                 {lang === 'en' ? CATEGORY_LABEL[cat].en : CATEGORY_LABEL[cat].ko}
               </div>
               <div className="grid gap-1.5 sm:grid-cols-2">
                 {GLOSSARY.filter((g) => g.category === cat).map((g) => (
                   <div
                     key={g.id}
-                    className="flex items-baseline justify-between gap-3 rounded-lg border border-brand-100 bg-white px-3 py-2"
+                    className="flex items-baseline justify-between gap-3 rounded-lg border border-line bg-surface px-3 py-2"
                   >
-                    <span className="text-sm font-medium text-slate-800">{g.en}</span>
-                    <span className="text-right text-sm text-brand-700">
+                    <span className="text-sm font-medium text-ink">{g.en}</span>
+                    <span className="text-right text-sm text-accentink">
                       {g.ko}
                       {g.koRomanized && (
-                        <span className="ml-1 text-xs text-slate-400">{g.koRomanized}</span>
+                        <span className="ml-1 text-xs text-faint">{g.koRomanized}</span>
                       )}
                     </span>
                   </div>
@@ -89,7 +89,7 @@ export function ClinicCard() {
       <SectionCard
         title={
           <span className="inline-flex items-center gap-2">
-            <MessagesSquare size={18} className="text-brand-600" />
+            <MessagesSquare size={18} className="text-accentink" />
             {lang === 'en' ? 'Questions to ask at this visit' : '이번 진료에서 물어볼 질문'}
           </span>
         }
@@ -98,10 +98,10 @@ export function ClinicCard() {
           {questions.map((q) => (
             <li
               key={q.id}
-              className="rounded-lg border border-brand-100 bg-white px-3 py-2"
+              className="rounded-lg border border-line bg-surface px-3 py-2"
             >
-              <p className="text-sm font-medium text-slate-800">{q.question.en}</p>
-              <p className="mt-0.5 text-sm text-brand-700">{q.question.ko}</p>
+              <p className="text-sm font-medium text-ink">{q.question.en}</p>
+              <p className="mt-0.5 text-sm text-accentink">{q.question.ko}</p>
             </li>
           ))}
         </ul>

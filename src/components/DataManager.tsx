@@ -43,17 +43,17 @@ export function DataManager() {
       title={t('navData')}
       subtitle={
         <span className="inline-flex items-center gap-1.5">
-          <ShieldCheck size={14} className="text-brand-500" />
+          <ShieldCheck size={14} className="text-accentink" />
           {t('privacyNote')}
         </span>
       }
     >
       <div className="flex flex-wrap gap-2">
-        <button onClick={doExport} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">
+        <button onClick={doExport} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primaryhover">
           <Download size={15} />
           {t('exportData')}
         </button>
-        <button onClick={() => fileRef.current?.click()} className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-white px-4 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50">
+        <button onClick={() => fileRef.current?.click()} className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-accentink hover:bg-surface2">
           <Upload size={15} />
           {t('importData')}
         </button>
@@ -65,13 +65,13 @@ export function DataManager() {
               setMsg(lang === 'en' ? 'All data cleared.' : '모든 데이터를 지웠습니다.')
             }
           }}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-rose-accent/40 bg-white px-4 py-2 text-sm font-medium text-rose-accent hover:bg-rose-accent/5"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-rose-accent/40 bg-surface px-4 py-2 text-sm font-medium text-rose-accent hover:bg-rose-accent/5"
         >
           <Trash2 size={15} />
           {t('clear')}
         </button>
       </div>
-      {msg && <p className="mt-3 text-sm text-brand-700">{msg}</p>}
+      {msg && <p className="mt-3 text-sm text-accentink">{msg}</p>}
     </SectionCard>
   )
 }

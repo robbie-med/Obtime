@@ -18,11 +18,11 @@ export function Trackers() {
     <div className="space-y-6">
       {ga && (
         <SectionCard title={
-          <span className="inline-flex items-center gap-2"><Timer size={18} className="text-brand-600" />{lang === 'en' ? 'Countdown' : '카운트다운'}</span>
+          <span className="inline-flex items-center gap-2"><Timer size={18} className="text-accentink" />{lang === 'en' ? 'Countdown' : '카운트다운'}</span>
         }>
-          <p className="text-3xl font-bold text-brand-700">
+          <p className="text-3xl font-bold text-accentink">
             {Math.max(0, ga.daysUntilDue)}
-            <span className="ml-2 text-base font-medium text-slate-500">
+            <span className="ml-2 text-base font-medium text-muted">
               {lang === 'en' ? 'days to your due date' : '일 남음 (예정일까지)'}
             </span>
           </p>
@@ -53,7 +53,7 @@ function WeightTracker() {
 
   return (
     <SectionCard title={
-      <span className="inline-flex items-center gap-2"><Scale size={18} className="text-brand-600" />{lang === 'en' ? 'Weight vs. target' : '체중 대비 목표'}</span>
+      <span className="inline-flex items-center gap-2"><Scale size={18} className="text-accentink" />{lang === 'en' ? 'Weight vs. target' : '체중 대비 목표'}</span>
     }>
       {!bmi ? (
         <SetupBmi />
@@ -62,21 +62,21 @@ function WeightTracker() {
           <TargetSummary bmi={bmi} gaWeeks={ga?.weeks ?? 0} />
           <div className="mt-3 flex items-end gap-2">
             <label className="text-sm">
-              <span className="mb-1 block text-slate-600">
+              <span className="mb-1 block text-muted">
                 {lang === 'en' ? 'Log weight (kg)' : '체중 입력 (kg)'}
-                {ga && <span className="text-slate-400"> · {ga.weeks}w</span>}
+                {ga && <span className="text-faint"> · {ga.weeks}w</span>}
               </span>
               <input
                 type="number"
                 step="0.1"
                 value={kg}
                 onChange={(e) => setKg(e.target.value)}
-                className="w-32 rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm"
+                className="w-32 rounded-lg border border-line bg-surface px-3 py-2 text-sm"
               />
             </label>
             <button
               onClick={addWeight}
-              className="inline-flex items-center gap-1 rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+              className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white hover:bg-primaryhover"
             >
               <Plus size={15} />
               {lang === 'en' ? 'Add' : '추가'}
@@ -89,14 +89,14 @@ function WeightTracker() {
                 const band = bmi ? expectedGainBand(bmi, w.ga) : null
                 const within = gain != null && band ? gain >= band[0] - 1 && gain <= band[1] + 1 : true
                 return (
-                  <li key={i} className="flex items-center justify-between rounded border border-brand-50 px-2 py-1">
-                    <span className="text-slate-500">{Math.round(w.ga)}w</span>
-                    <span className="font-medium text-slate-700">{w.kg} kg</span>
+                  <li key={i} className="flex items-center justify-between rounded border border-line px-2 py-1">
+                    <span className="text-muted">{Math.round(w.ga)}w</span>
+                    <span className="font-medium text-ink">{w.kg} kg</span>
                     {gain != null && (
-                      <span className={within ? 'text-brand-600' : 'text-rose-accent'}>
+                      <span className={within ? 'text-accentink' : 'text-rose-accent'}>
                         {gain >= 0 ? '+' : ''}{gain} kg
                         {band && (
-                          <span className="ml-1 text-xs text-slate-400">
+                          <span className="ml-1 text-xs text-faint">
                             ({lang === 'en' ? 'target' : '목표'} +{band[0]}–{band[1]})
                           </span>
                         )}
@@ -104,7 +104,7 @@ function WeightTracker() {
                     )}
                     <button
                       onClick={() => update({ weights: profile.weights.filter((_, j) => j !== i) })}
-                      className="text-slate-300 hover:text-rose-accent"
+                      className="text-faint hover:text-rose-accent"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -125,24 +125,24 @@ function SetupBmi() {
   const [h, setH] = useState(profile.heightCm?.toString() ?? '')
   const [w, setW] = useState(profile.prePregnancyWeightKg?.toString() ?? '')
   return (
-    <div className="rounded-lg bg-brand-50 p-3">
-      <p className="mb-2 text-sm text-slate-600">
+    <div className="rounded-lg bg-primarysoft p-3">
+      <p className="mb-2 text-sm text-muted">
         {lang === 'en'
           ? 'Enter your height and pre-pregnancy weight to see your recommended weight-gain range.'
           : '키와 임신 전 체중을 입력하면 권장 체중 증가 범위를 확인할 수 있습니다.'}
       </p>
       <div className="flex flex-wrap items-end gap-2">
         <label className="text-sm">
-          <span className="mb-1 block text-slate-600">{lang === 'en' ? 'Height (cm)' : '키 (cm)'}</span>
-          <input type="number" value={h} onChange={(e) => setH(e.target.value)} className="w-28 rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm" />
+          <span className="mb-1 block text-muted">{lang === 'en' ? 'Height (cm)' : '키 (cm)'}</span>
+          <input type="number" value={h} onChange={(e) => setH(e.target.value)} className="w-28 rounded-lg border border-line bg-surface px-3 py-2 text-sm" />
         </label>
         <label className="text-sm">
-          <span className="mb-1 block text-slate-600">{lang === 'en' ? 'Pre-pregnancy weight (kg)' : '임신 전 체중 (kg)'}</span>
-          <input type="number" step="0.1" value={w} onChange={(e) => setW(e.target.value)} className="w-36 rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm" />
+          <span className="mb-1 block text-muted">{lang === 'en' ? 'Pre-pregnancy weight (kg)' : '임신 전 체중 (kg)'}</span>
+          <input type="number" step="0.1" value={w} onChange={(e) => setW(e.target.value)} className="w-36 rounded-lg border border-line bg-surface px-3 py-2 text-sm" />
         </label>
         <button
           onClick={() => h && w && update({ heightCm: Number(h), prePregnancyWeightKg: Number(w), prePregnancyBmi: computeBmi(Number(h), Number(w)) })}
-          className="rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+          className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white hover:bg-primaryhover"
         >
           {lang === 'en' ? 'Save' : '저장'}
         </button>
@@ -163,14 +163,14 @@ function TargetSummary({ bmi, gaWeeks }: { bmi: number; gaWeeks: number }) {
     obese: { en: 'obese', ko: '비만' },
   }
   return (
-    <div className="rounded-lg bg-brand-50 p-3 text-sm text-slate-700">
+    <div className="rounded-lg bg-primarysoft p-3 text-sm text-ink">
       <p>
         {lang === 'en' ? 'Pre-pregnancy BMI ' : '임신 전 BMI '}
         <span className="font-semibold">{bmi.toFixed(1)}</span> ({lang === 'en' ? catLabel[cat].en : catLabel[cat].ko}) ·{' '}
         {lang === 'en' ? 'total recommended gain ' : '총 권장 증가 '}
         <span className="font-semibold">{t.totalKgRange[0]}–{t.totalKgRange[1]} kg</span>
       </p>
-      <p className="mt-1 text-brand-700">
+      <p className="mt-1 text-accentink">
         {lang === 'en'
           ? `By ${gaWeeks}w, expect about +${band[0]}–${band[1]} kg.`
           : `${gaWeeks}주에는 약 +${band[0]}~${band[1]} kg 예상.`}
@@ -200,35 +200,35 @@ function KickCounter() {
 
   return (
     <SectionCard title={
-      <span className="inline-flex items-center gap-2"><Footprints size={18} className="text-brand-600" />{lang === 'en' ? 'Kick counter' : '태동 카운터'}</span>
+      <span className="inline-flex items-center gap-2"><Footprints size={18} className="text-accentink" />{lang === 'en' ? 'Kick counter' : '태동 카운터'}</span>
     }>
       {startedAt ? (
         <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={() => setCount((c) => c + 1)}
-            className="flex h-24 w-24 items-center justify-center rounded-full bg-brand-600 text-3xl font-bold text-white hover:bg-brand-700"
+            className="flex h-24 w-24 items-center justify-center rounded-full bg-primary text-3xl font-bold text-white hover:bg-primaryhover"
           >
             {count}
           </button>
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-muted">
             {lang === 'en' ? 'Tap for each movement you feel.' : '움직임을 느낄 때마다 누르세요.'}
           </div>
-          <button onClick={save} className="rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50">
+          <button onClick={save} className="rounded-lg border border-line bg-surface px-3 py-2 text-sm font-medium text-accentink hover:bg-surface2">
             {lang === 'en' ? 'Save session' : '기록 저장'}
           </button>
         </div>
       ) : (
-        <button onClick={start} className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">
+        <button onClick={start} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primaryhover">
           {lang === 'en' ? 'Start counting' : '카운트 시작'}
         </button>
       )}
       {profile.kickSessions.length > 0 && (
-        <ul className="mt-3 space-y-1 text-sm text-slate-600">
+        <ul className="mt-3 space-y-1 text-sm text-muted">
           {profile.kickSessions.slice(0, 5).map((s, i) => (
-            <li key={i} className="flex justify-between rounded border border-brand-50 px-2 py-1">
+            <li key={i} className="flex justify-between rounded border border-line px-2 py-1">
               <span>{new Date(s.startedAt).toLocaleDateString(lang === 'ko' ? 'ko-KR' : 'en-US')}</span>
               <span className="font-medium">{s.count} {lang === 'en' ? 'kicks' : '회'}</span>
-              {s.durationMin != null && <span className="text-slate-400">{s.durationMin} min</span>}
+              {s.durationMin != null && <span className="text-faint">{s.durationMin} min</span>}
             </li>
           ))}
         </ul>
@@ -258,38 +258,38 @@ function Notes() {
 
   return (
     <SectionCard title={
-      <span className="inline-flex items-center gap-2"><NotebookPen size={18} className="text-brand-600" />{lang === 'en' ? 'Appointment notes' : '진료 메모'}</span>
+      <span className="inline-flex items-center gap-2"><NotebookPen size={18} className="text-accentink" />{lang === 'en' ? 'Appointment notes' : '진료 메모'}</span>
     }>
       <div className="space-y-2">
         <input
           value={label}
           onChange={(e) => setLabel(e.target.value)}
           placeholder={lang === 'en' ? 'Visit label (optional)' : '진료 제목 (선택)'}
-          className="w-full rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm"
+          className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm"
         />
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder={lang === 'en' ? 'Questions, results, reminders…' : '질문, 결과, 메모…'}
           rows={2}
-          className="w-full rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm"
+          className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm"
         />
-        <button onClick={add} className="rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white hover:bg-brand-700">
+        <button onClick={add} className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white hover:bg-primaryhover">
           {lang === 'en' ? 'Add note' : '메모 추가'}
         </button>
       </div>
       <ul className="mt-3 space-y-2">
         {profile.notes.map((n) => (
-          <li key={n.id} className="rounded-lg border border-brand-100 bg-white px-3 py-2">
+          <li key={n.id} className="rounded-lg border border-line bg-surface px-3 py-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-brand-600">
+              <span className="text-xs font-medium text-accentink">
                 {n.visitLabel || new Date(n.createdAt).toLocaleDateString(lang === 'ko' ? 'ko-KR' : 'en-US')}
               </span>
-              <button onClick={() => update({ notes: profile.notes.filter((x) => x.id !== n.id) })} className="text-slate-300 hover:text-rose-accent">
+              <button onClick={() => update({ notes: profile.notes.filter((x) => x.id !== n.id) })} className="text-faint hover:text-rose-accent">
                 <Trash2 size={14} />
               </button>
             </div>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-slate-700">{n.text}</p>
+            <p className="mt-1 whitespace-pre-wrap text-sm text-ink">{n.text}</p>
           </li>
         ))}
       </ul>

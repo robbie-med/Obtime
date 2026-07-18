@@ -54,21 +54,21 @@ export function Resources() {
             href={r.url}
             target="_blank"
             rel="noreferrer"
-            className="group rounded-xl border border-brand-100 bg-white p-4 transition hover:border-brand-300 hover:shadow-sm"
+            className="group rounded-xl border border-line bg-surface p-4 transition hover:border-primary hover:shadow-sm"
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="font-semibold text-brand-800 group-hover:text-brand-600">
+              <span className="font-semibold text-ink group-hover:text-accentink">
                 {tc(r.name)}
               </span>
               <div className="flex items-center gap-1.5">
                 <CountryTag country={r.country} />
-                <ExternalLink size={14} className="text-slate-300 group-hover:text-brand-500" />
+                <ExternalLink size={14} className="text-faint group-hover:text-accentink" />
               </div>
             </div>
-            <p className="mt-1 text-sm text-slate-600">{tc(r.description)}</p>
+            <p className="mt-1 text-sm text-muted">{tc(r.description)}</p>
             <div className="mt-2 flex gap-1">
               {r.lang.map((l) => (
-                <span key={l} className="rounded bg-brand-50 px-1.5 py-0.5 text-[10px] font-medium uppercase text-brand-600">
+                <span key={l} className="rounded bg-primarysoft px-1.5 py-0.5 text-[10px] font-medium uppercase text-accentink">
                   {l}
                 </span>
               ))}
@@ -90,14 +90,14 @@ function FilterGroup<T extends string>({
   options: { v: T; label: string }[]
 }) {
   return (
-    <div className="inline-flex overflow-hidden rounded-lg border border-brand-200 text-sm">
+    <div className="inline-flex overflow-hidden rounded-lg border border-line text-sm">
       {options.map((o) => (
         <button
           key={o.v}
           onClick={() => onChange(o.v)}
           className={clsx(
             'px-3 py-1.5 font-medium',
-            value === o.v ? 'bg-brand-600 text-white' : 'bg-white text-brand-700 hover:bg-brand-50',
+            value === o.v ? 'bg-primary text-white' : 'bg-surface text-accentink hover:bg-surface2',
           )}
         >
           {o.label}

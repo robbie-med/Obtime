@@ -42,11 +42,11 @@ export function Onboard({ compact = false }: { compact?: boolean }) {
         </span>
       }
       subtitle={t('onboardSub')}
-      className={compact ? 'bg-white' : ''}
+      className={compact ? 'bg-surface' : ''}
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="text-sm">
-          <span className="mb-1 block font-medium text-slate-600">{t('lmpLabel')}</span>
+          <span className="mb-1 block font-medium text-muted">{t('lmpLabel')}</span>
           <input
             type="date"
             value={lmp}
@@ -54,11 +54,11 @@ export function Onboard({ compact = false }: { compact?: boolean }) {
               setLmp(e.target.value)
               setEdd('')
             }}
-            className="w-full rounded-lg border border-brand-200 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none"
+            className="w-full rounded-lg border border-line bg-surface px-3 py-2 focus:border-primary focus:outline-none"
           />
         </label>
         <label className="text-sm">
-          <span className="mb-1 block font-medium text-slate-600">{t('eddLabel')}</span>
+          <span className="mb-1 block font-medium text-muted">{t('eddLabel')}</span>
           <input
             type="date"
             value={edd}
@@ -66,13 +66,13 @@ export function Onboard({ compact = false }: { compact?: boolean }) {
               setEdd(e.target.value)
               setLmp('')
             }}
-            className="w-full rounded-lg border border-brand-200 bg-white px-3 py-2 focus:border-brand-400 focus:outline-none"
+            className="w-full rounded-lg border border-line bg-surface px-3 py-2 focus:border-primary focus:outline-none"
           />
         </label>
       </div>
 
       {previewGa && previewEdd && (
-        <p className="mt-3 rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-700">
+        <p className="mt-3 rounded-lg bg-primarysoft px-3 py-2 text-sm text-accentink">
           {lang === 'en'
             ? `Due ${toIso(previewEdd)} · about ${previewGa.weeks}w ${previewGa.days}d today · trimester ${previewGa.trimester}`
             : `예정일 ${toIso(previewEdd)} · 현재 약 ${previewGa.weeks}주 ${previewGa.days}일 · ${previewGa.trimester}삼분기`}
@@ -83,12 +83,12 @@ export function Onboard({ compact = false }: { compact?: boolean }) {
         <button
           onClick={save}
           disabled={!lmp && !edd}
-          className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-40"
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primaryhover disabled:opacity-40"
         >
           {hasProfile ? t('edit') : t('save')}
         </button>
         {hasProfile && ga && (
-          <span className="text-sm text-slate-500">
+          <span className="text-sm text-muted">
             {t('youAreHere')}: {ga.weeks}
             {lang === 'en' ? 'w' : '주'} {ga.days}
             {lang === 'en' ? 'd' : '일'}
