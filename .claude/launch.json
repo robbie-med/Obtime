@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "machung",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["run.sh", "dev"],
+      "port": 3101,
+      "autoPort": false
+    },
+    {
+      "name": "machung-prod",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["run.sh", "preview"],
+      "port": 3101,
+      "autoPort": false
+    }
+  ]
+}

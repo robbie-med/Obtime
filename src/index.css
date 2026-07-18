@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+/* --- Design tokens: calm clinical palette --- */
+@theme {
+  --font-sans: 'Pretendard', 'Pretendard Variable', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+
+  --color-brand-50: #eef6f6;
+  --color-brand-100: #d6eaea;
+  --color-brand-200: #aed6d6;
+  --color-brand-300: #7bbcbc;
+  --color-brand-400: #4c9d9d;
+  --color-brand-500: #2f8080;
+  --color-brand-600: #236767;
+  --color-brand-700: #1d5252;
+  --color-brand-800: #1a4242;
+  --color-brand-900: #173636;
+
+  --color-rose-accent: #d98a9e;
+  --color-us: #3b6fb0;
+  --color-kr: #c0473f;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-brand-50 text-slate-800 antialiased;
+  font-feature-settings: 'tnum' 0;
+}
+
+/* Language-aware line breaking: Korean text should not break mid-word awkwardly */
+:lang(ko) {
+  word-break: keep-all;
+  line-break: strict;
+}
+
+/* --- Print: only the targeted print view shows --- */
+@media print {
+  body {
+    background: white;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-page {
+    page-break-after: always;
+  }
+}
+
+.print-only {
+  display: none;
+}
