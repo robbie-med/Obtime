@@ -30,11 +30,26 @@ export interface TimelineEvent {
   id: string
   country: Country
   kind: EventKind
-  window: GaWindow
+  /** The single representative gestational week this event is placed at on the axis. */
+  anchor: number
+  /** True when the exact week is flexible (the axis dot is shown as "~" and the range in the tooltip). */
+  approx?: boolean
+  window: GaWindow // full recommended range (shown as detail / used for due-status)
   title: Bilingual
-  summary: Bilingual // mom-facing plain language
+  summary: Bilingual // mom-facing plain language: what to expect at this point
   clinicianDetail?: Bilingual // thresholds, guideline specifics — clinician mode only
   routine: boolean // true = offered to everyone; false = indication-based
+  sourceIds?: string[]
+}
+
+// Recurring visit cadence — a rhythm over a span of weeks, not a single event.
+// Rendered as a labeled bracket alongside the timeline rather than as a point.
+export interface VisitCadence {
+  country: Country
+  from: number
+  to: number
+  every: Bilingual // e.g. "every 4 weeks"
+  detail: Bilingual // what happens at each of these visits
   sourceIds?: string[]
 }
 

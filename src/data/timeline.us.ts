@@ -1,17 +1,21 @@
-import type { TimelineEvent } from './types'
+import type { TimelineEvent, VisitCadence } from './types'
 
-// US prenatal timeline, ported from the clinical reference document.
-// Windows are gestational weeks. `routine` = offered to everyone.
+// US prenatal timeline. Each event is anchored to a single representative week
+// (`anchor`); `approx` marks events whose exact timing is flexible. `window` keeps
+// the full recommended range for the tooltip and due-status. Ported from the
+// clinical reference document (ACOG/USPSTF cadence).
 export const US_TIMELINE: TimelineEvent[] = [
   {
     id: 'us-initial-visit',
     country: 'us',
     kind: 'visit',
+    anchor: 8,
+    approx: true,
     window: { start: 6, end: 10 },
-    title: { en: 'Initial prenatal visit', ko: '첫 산전 진료' },
+    title: { en: 'First prenatal visit', ko: '첫 산전 진료' },
     summary: {
-      en: 'History, physical exam, due-date dating, and the first round of blood and urine tests.',
-      ko: '병력 청취, 신체 검진, 출산 예정일 확정, 첫 혈액·소변 검사를 합니다.',
+      en: 'Expect: full history, physical exam, blood pressure and weight, due-date dating, and an offer of genetic screening.',
+      ko: '예상: 자세한 병력, 신체 검진, 혈압·체중, 예정일 확정, 유전자 선별검사 제안.',
     },
     clinicianDetail: {
       en: 'Comprehensive history/physical, BP, weight/height, risk stratification, EDD determination, offer aneuploidy & carrier screening.',
@@ -24,11 +28,13 @@ export const US_TIMELINE: TimelineEvent[] = [
     id: 'us-initial-labs',
     country: 'us',
     kind: 'lab',
+    anchor: 9,
+    approx: true,
     window: { start: 6, end: 12 },
-    title: { en: 'First-trimester lab panel', ko: '임신 초기 혈액 검사' },
+    title: { en: 'First-trimester blood & urine tests', ko: '임신 초기 혈액·소변 검사' },
     summary: {
-      en: 'CBC, blood type & Rh, antibody screen, urine tests, and infection screening (HIV, hepatitis B & C, syphilis, rubella, varicella).',
-      ko: '전혈구검사, 혈액형·Rh, 항체 선별, 소변 검사, 감염 선별(HIV, B·C형 간염, 매독, 풍진, 수두)을 합니다.',
+      en: 'Expect: blood count, blood type & Rh, antibody screen, urine tests, and infection screening (HIV, hepatitis B & C, syphilis, rubella, varicella).',
+      ko: '예상: 전혈구, 혈액형·Rh, 항체 선별, 소변 검사, 감염 선별(HIV, B·C형 간염, 매독, 풍진, 수두).',
     },
     clinicianDetail: {
       en: 'CBC, ABO/RhD + RBC antibody screen, urine dipstick + culture, HIV (opt-out), HBsAg, anti-HCV, syphilis; rubella/varicella immunity; TSH & Pap if indicated.',
@@ -41,11 +47,13 @@ export const US_TIMELINE: TimelineEvent[] = [
     id: 'us-dating-us',
     country: 'us',
     kind: 'ultrasound',
+    anchor: 9,
+    approx: true,
     window: { start: 6, end: 13 },
     title: { en: 'Dating ultrasound', ko: '초기 초음파 (주수 확인)' },
     summary: {
-      en: 'Confirms the pregnancy location, number of babies, heartbeat, and the most accurate due date.',
-      ko: '임신 위치, 태아 수, 심장 박동, 가장 정확한 예정일을 확인합니다.',
+      en: 'Expect: confirmation of the pregnancy location, number of babies, heartbeat, and your most accurate due date.',
+      ko: '예상: 임신 위치, 태아 수, 심장 박동 확인과 가장 정확한 예정일.',
     },
     clinicianDetail: {
       en: 'Crown-rump length dating is most accurate < 14 wk; reassign EDD per discrepancy rules (>5d < 9wk, >7d 9–13wk).',
@@ -58,11 +66,13 @@ export const US_TIMELINE: TimelineEvent[] = [
     id: 'us-cfdna',
     country: 'us',
     kind: 'screening',
+    anchor: 11,
+    approx: true,
     window: { start: 10, end: 22 },
     title: { en: 'Cell-free DNA screen (NIPT)', ko: '무세포 DNA 선별검사 (NIPT)' },
     summary: {
-      en: 'An optional blood test from ~10 weeks that screens for common chromosome conditions and can tell the baby’s sex.',
-      ko: '약 10주부터 가능한 선택적 혈액검사로, 흔한 염색체 이상을 선별하고 태아 성별도 확인할 수 있습니다.',
+      en: 'Optional blood test from 10 weeks. Screens for common chromosome conditions and can reveal the baby’s sex.',
+      ko: '10주부터 가능한 선택적 혈액검사. 흔한 염색체 이상을 선별하고 태아 성별도 확인할 수 있습니다.',
     },
     clinicianDetail: {
       en: 'Most sensitive/specific screen for T21/T18/T13; from 9–10 wk. Screening, not diagnostic — confirm positives with CVS/amnio.',
@@ -75,11 +85,13 @@ export const US_TIMELINE: TimelineEvent[] = [
     id: 'us-nt',
     country: 'us',
     kind: 'screening',
+    anchor: 12,
+    approx: true,
     window: { start: 10, end: 14 },
     title: { en: 'Nuchal translucency + combined screen', ko: '목덜미 투명대 + 1차 통합 선별' },
     summary: {
-      en: 'An ultrasound measurement plus blood test (10–14 weeks) that estimates the chance of chromosome conditions.',
-      ko: '10–14주에 초음파 측정과 혈액검사를 함께 해 염색체 이상 위험도를 추정합니다.',
+      en: 'Ultrasound neck measurement plus a blood test that estimates the chance of chromosome conditions.',
+      ko: '초음파 목덜미 측정과 혈액검사로 염색체 이상 위험도를 추정합니다.',
     },
     clinicianDetail: {
       en: 'NT ≥ 3 mm or > 99th pct is positive; combined with β-hCG + PAPP-A ± AFP and maternal age.',
@@ -92,11 +104,13 @@ export const US_TIMELINE: TimelineEvent[] = [
     id: 'us-cvs',
     country: 'us',
     kind: 'screening',
+    anchor: 12,
+    approx: true,
     window: { start: 10, end: 13 },
-    title: { en: 'Chorionic villus sampling (if indicated)', ko: '융모막 융모 생검 (필요 시)' },
+    title: { en: 'Chorionic villus sampling', ko: '융모막 융모 생검 (CVS)' },
     summary: {
-      en: 'A diagnostic test done only when screening or history suggests higher risk.',
-      ko: '선별검사나 병력상 위험이 높을 때만 시행하는 확진검사입니다.',
+      en: 'Diagnostic test — only if screening or history suggests higher risk. Small (~0.2%) miscarriage risk.',
+      ko: '확진검사 — 선별검사나 병력상 위험이 높을 때만. 유산 위험 약 0.2%.',
     },
     clinicianDetail: {
       en: 'Transcervical/transabdominal placental sampling 10–13 wk; ~0.2% miscarriage risk.',
@@ -109,11 +123,13 @@ export const US_TIMELINE: TimelineEvent[] = [
     id: 'us-quad',
     country: 'us',
     kind: 'screening',
+    anchor: 16,
+    approx: true,
     window: { start: 15, end: 22 },
     title: { en: 'Quad screen', ko: '쿼드 검사' },
     summary: {
-      en: 'A second-trimester blood test option (15–22 weeks) for chromosome conditions and neural tube defects.',
-      ko: '임신 중기(15–22주) 혈액검사로 염색체 이상과 신경관 결손을 선별하는 선택지입니다.',
+      en: 'Second-trimester blood test option for chromosome conditions and neural tube defects (if not already screened by NIPT).',
+      ko: '임신 중기 혈액검사로 염색체 이상과 신경관 결손을 선별(이미 NIPT를 했다면 생략 가능).',
     },
     clinicianDetail: {
       en: 'β-hCG, AFP, unconjugated estriol, inhibin A; also screens NTDs via AFP.',
@@ -126,11 +142,13 @@ export const US_TIMELINE: TimelineEvent[] = [
     id: 'us-anatomy',
     country: 'us',
     kind: 'ultrasound',
+    anchor: 20,
+    approx: true,
     window: { start: 18, end: 22 },
     title: { en: 'Anatomy scan', ko: '정밀 초음파 (태아 해부학)' },
     summary: {
-      en: 'A detailed ultrasound (18–22 weeks) checking the baby’s growth and organs. You can usually learn the sex.',
-      ko: '18–22주에 태아의 성장과 장기를 자세히 보는 초음파입니다. 보통 성별도 확인할 수 있습니다.',
+      en: 'Detailed ultrasound of the baby’s growth and every organ. You can usually learn the sex. Usually the only routine US scan.',
+      ko: '태아의 성장과 모든 장기를 자세히 보는 초음파. 보통 성별도 확인. 미국에서는 대개 유일한 정기 초음파입니다.',
     },
     clinicianDetail: {
       en: 'Fetal biometry (BPD, HC, AC, FL), anatomy survey, placenta/cord, amniotic fluid (DVP/AFI), cervix.',
@@ -140,27 +158,16 @@ export const US_TIMELINE: TimelineEvent[] = [
     sourceIds: ['seed-doc'],
   },
   {
-    id: 'us-visits-q4',
-    country: 'us',
-    kind: 'visit',
-    window: { start: 12, end: 28 },
-    title: { en: 'Routine visits — every 4 weeks', ko: '정기 진료 — 4주마다' },
-    summary: {
-      en: 'Until 28 weeks, checkups are about once a month: weight, blood pressure, and the baby’s growth and heartbeat.',
-      ko: '28주까지는 약 한 달에 한 번 진료합니다: 체중, 혈압, 태아 성장과 심박을 확인합니다.',
-    },
-    routine: true,
-    sourceIds: ['seed-doc', 'acog'],
-  },
-  {
     id: 'us-ogtt',
     country: 'us',
     kind: 'lab',
+    anchor: 26,
+    approx: true,
     window: { start: 24, end: 28 },
-    title: { en: 'Gestational diabetes test + repeat CBC', ko: '임신성 당뇨 검사 + 빈혈 재검' },
+    title: { en: 'Gestational diabetes test + repeat blood count', ko: '임신성 당뇨 검사 + 빈혈 재검' },
     summary: {
-      en: 'A glucose test (24–28 weeks) for gestational diabetes, plus a repeat blood count for anemia.',
-      ko: '24–28주에 임신성 당뇨를 위한 혈당 검사와 빈혈 확인을 위한 혈액검사를 다시 합니다.',
+      en: 'Expect: a glucose test for gestational diabetes, plus a repeat blood count to recheck for anemia.',
+      ko: '예상: 임신성 당뇨를 위한 혈당 검사와 빈혈 재확인 혈액검사.',
     },
     clinicianDetail: {
       en: 'One-step 75 g OGTT or two-step 50 g GCT → 100 g OGTT. Repeat CBC for anemia/thrombocytopenia.',
@@ -173,11 +180,12 @@ export const US_TIMELINE: TimelineEvent[] = [
     id: 'us-anti-d',
     country: 'us',
     kind: 'lab',
+    anchor: 28,
     window: { start: 28, end: 28 },
-    title: { en: 'Anti-D (RhoGAM) if Rh-negative', ko: 'Rh 음성이면 항-D 면역글로불린' },
+    title: { en: 'Anti-D (RhoGAM) — if Rh-negative', ko: 'Rh 음성이면 항-D 면역글로불린' },
     summary: {
-      en: 'If your blood type is Rh-negative, you get a protective injection around 28 weeks.',
-      ko: '혈액형이 Rh 음성이면 약 28주에 예방 주사를 맞습니다.',
+      en: 'If your blood type is Rh-negative, expect a protective injection at 28 weeks (and again after birth).',
+      ko: '혈액형이 Rh 음성이면 28주에 예방 주사(그리고 출산 후 다시)를 맞습니다.',
     },
     clinicianDetail: {
       en: 'Antibody screen at 28 wk; administer anti-D immunoglobulin to non-sensitized RhD-negative individuals.',
@@ -187,27 +195,16 @@ export const US_TIMELINE: TimelineEvent[] = [
     sourceIds: ['seed-doc'],
   },
   {
-    id: 'us-visits-q2',
-    country: 'us',
-    kind: 'visit',
-    window: { start: 28, end: 36 },
-    title: { en: 'Routine visits — every 2 weeks', ko: '정기 진료 — 2주마다' },
-    summary: {
-      en: 'From 28 to 36 weeks, checkups become every two weeks.',
-      ko: '28주부터 36주까지는 2주마다 진료합니다.',
-    },
-    routine: true,
-    sourceIds: ['seed-doc'],
-  },
-  {
     id: 'us-tdap',
     country: 'us',
     kind: 'vaccine',
+    anchor: 28,
+    approx: true,
     window: { start: 27, end: 36 },
     title: { en: 'Tdap vaccine (whooping cough)', ko: 'Tdap 백신 (백일해)' },
     summary: {
-      en: 'Given every pregnancy at 27–36 weeks to protect your newborn from whooping cough.',
-      ko: '매 임신마다 27–36주에 접종해 신생아를 백일해로부터 보호합니다.',
+      en: 'Given every pregnancy — best at 27–28 weeks — so antibodies pass to protect your newborn from whooping cough.',
+      ko: '매 임신마다 — 27–28주가 가장 좋음 — 접종해 항체가 아기에게 전달되어 백일해를 예방합니다.',
     },
     routine: true,
     sourceIds: ['seed-doc', 'cdc-vac'],
@@ -216,24 +213,43 @@ export const US_TIMELINE: TimelineEvent[] = [
     id: 'us-rsv',
     country: 'us',
     kind: 'vaccine',
+    anchor: 33,
+    approx: true,
     window: { start: 32, end: 36 },
-    title: { en: 'RSV vaccine', ko: 'RSV(호흡기세포융합바이러스) 백신' },
+    title: { en: 'RSV vaccine (seasonal)', ko: 'RSV 백신 (계절)' },
     summary: {
-      en: 'Offered at 32–36 weeks (seasonally) if not already protected, to shield the baby from RSV.',
-      ko: '이미 보호되지 않은 경우 32–36주(계절별)에 접종해 아기를 RSV로부터 보호합니다.',
+      en: 'Offered at 32–36 weeks in RSV season (Sep–Jan) if you won’t give the baby the antibody shot instead.',
+      ko: 'RSV 유행기(9–1월) 32–36주에 접종 — 아기에게 항체 주사를 대신 놓지 않는 경우.',
     },
     routine: true,
     sourceIds: ['seed-doc', 'cdc-vac'],
   },
   {
+    id: 'us-flu',
+    country: 'us',
+    kind: 'vaccine',
+    anchor: 10,
+    approx: true,
+    window: { start: 4 },
+    title: { en: 'Flu shot (any trimester, in season)', ko: '독감 백신 (계절 중 어느 시기든)' },
+    summary: {
+      en: 'Recommended at any point during flu season — safe in every trimester.',
+      ko: '독감 유행 시기에는 어느 시점이든 권장되며 모든 삼분기에 안전합니다.',
+    },
+    routine: true,
+    sourceIds: ['cdc-vac'],
+  },
+  {
     id: 'us-gbs',
     country: 'us',
     kind: 'lab',
+    anchor: 36,
+    approx: true,
     window: { start: 36, end: 38 },
     title: { en: 'Group B strep swab', ko: 'B군 연쇄구균(GBS) 검사' },
     summary: {
-      en: 'A quick swab at 36–37 weeks; if positive you get antibiotics during labor to protect the baby.',
-      ko: '36–37주에 간단한 면봉 검사; 양성이면 분만 중 항생제로 아기를 보호합니다.',
+      en: 'A quick vaginal-rectal swab at 36–37 weeks. If positive, you get IV antibiotics during labor to protect the baby.',
+      ko: '36–37주에 간단한 질-직장 면봉 검사. 양성이면 분만 중 정맥 항생제로 아기를 보호합니다.',
     },
     clinicianDetail: {
       en: 'Vaginal-rectal culture at 36+0–37+6 wk; intrapartum prophylaxis if positive or unknown in labor.',
@@ -242,30 +258,41 @@ export const US_TIMELINE: TimelineEvent[] = [
     routine: true,
     sourceIds: ['seed-doc'],
   },
+]
+
+// Recurring visit cadence (ACOG). Rendered as brackets, not point events.
+export const US_CADENCE: VisitCadence[] = [
   {
-    id: 'us-weekly',
     country: 'us',
-    kind: 'visit',
-    window: { start: 36 },
-    title: { en: 'Routine visits — weekly', ko: '정기 진료 — 매주' },
-    summary: {
-      en: 'From 36 weeks until birth, checkups are weekly, watching position and readiness for labor.',
-      ko: '36주부터 출산까지 매주 진료하며 태아 위치와 분만 준비를 확인합니다.',
+    from: 8,
+    to: 28,
+    every: { en: 'Every 4 weeks', ko: '4주마다' },
+    detail: {
+      en: 'Monthly checkups: weight, blood pressure, urine dip, fundal height, and the baby’s heartbeat.',
+      ko: '월 1회 진료: 체중, 혈압, 소변, 자궁저 높이, 태아 심박 확인.',
     },
-    routine: true,
+    sourceIds: ['seed-doc', 'acog'],
+  },
+  {
+    country: 'us',
+    from: 28,
+    to: 36,
+    every: { en: 'Every 2 weeks', ko: '2주마다' },
+    detail: {
+      en: 'Visits step up to every two weeks as you enter the third trimester.',
+      ko: '3삼분기에 접어들며 2주마다로 늘어납니다.',
+    },
     sourceIds: ['seed-doc'],
   },
   {
-    id: 'us-flu',
     country: 'us',
-    kind: 'vaccine',
-    window: { start: 4 },
-    title: { en: 'Flu vaccine (any trimester, in season)', ko: '독감 백신 (계절 중 어느 시기든)' },
-    summary: {
-      en: 'Recommended at any point during flu season.',
-      ko: '독감 유행 시기에는 임신 어느 시점이든 권장됩니다.',
+    from: 36,
+    to: 41,
+    every: { en: 'Weekly', ko: '매주' },
+    detail: {
+      en: 'Weekly until birth — checking baby’s position, your blood pressure, and signs of labor.',
+      ko: '출산까지 매주 — 태아 위치, 혈압, 진통 징후 확인.',
     },
-    routine: true,
-    sourceIds: ['cdc-vac'],
+    sourceIds: ['seed-doc'],
   },
 ]

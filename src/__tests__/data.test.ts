@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { COMPARISON } from '../data/comparison'
-import { US_TIMELINE } from '../data/timeline.us'
-import { KR_TIMELINE } from '../data/timeline.kr'
+import { US_TIMELINE, US_CADENCE } from '../data/timeline.us'
+import { KR_TIMELINE, KR_CADENCE } from '../data/timeline.kr'
 import { DEV_WEEKS } from '../data/development'
 import { RED_FLAGS } from '../data/redflags'
 import { GLOSSARY } from '../data/glossary'
@@ -21,6 +21,8 @@ const ALL: unknown[] = [
   COMPARISON,
   US_TIMELINE,
   KR_TIMELINE,
+  US_CADENCE,
+  KR_CADENCE,
   DEV_WEEKS,
   RED_FLAGS,
   GLOSSARY,
@@ -103,6 +105,19 @@ describe('unique ids within each collection', () => {
       expect(new Set(ids).size, `duplicate id in ${name}`).toBe(ids.length)
     })
   }
+})
+
+describe('timeline anchors are valid', () => {
+  it('every event anchor sits within (or at) its window', () => {
+    const bad: string[] = []
+    for (const ev of [...US_TIMELINE, ...KR_TIMELINE]) {
+      const end = ev.window.end ?? 45
+      if (ev.anchor < ev.window.start || ev.anchor > end) {
+        bad.push(`${ev.id}: anchor ${ev.anchor} outside ${ev.window.start}–${ev.window.end ?? '∞'}`)
+      }
+    }
+    expect(bad, bad.join('\n')).toEqual([])
+  })
 })
 
 describe('dating math (Naegele + GA + discrepancy)', () => {

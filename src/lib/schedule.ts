@@ -1,8 +1,8 @@
 // Derive timeline/checklist status from gestational age.
 // Pure functions over the timeline data — used by Timeline, Checklist, This Week.
-import type { Country, GaWindow, TimelineEvent } from '../data/types'
-import { US_TIMELINE } from '../data/timeline.us'
-import { KR_TIMELINE } from '../data/timeline.kr'
+import type { Country, GaWindow, TimelineEvent, VisitCadence } from '../data/types'
+import { US_TIMELINE, US_CADENCE } from '../data/timeline.us'
+import { KR_TIMELINE, KR_CADENCE } from '../data/timeline.kr'
 import type { DeliveryPlan } from './persistence'
 
 export type EventStatus = 'past' | 'due' | 'upcoming'
@@ -22,7 +22,11 @@ export function windowStart(e: TimelineEvent): number {
 
 export function timelineFor(country: Country): TimelineEvent[] {
   const src = country === 'us' ? US_TIMELINE : KR_TIMELINE
-  return [...src].sort((a, b) => windowStart(a) - windowStart(b))
+  return [...src].sort((a, b) => a.anchor - b.anchor)
+}
+
+export function cadenceFor(country: Country): VisitCadence[] {
+  return country === 'us' ? US_CADENCE : KR_CADENCE
 }
 
 /**
