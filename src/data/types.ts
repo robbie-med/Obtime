@@ -92,6 +92,36 @@ export interface WeekMarker {
   indexIds?: string[]
 }
 
+// --- Routine check-ups -------------------------------------------------------
+// The in-between visits (every 4 → 2 → 1 weeks) have no headline test, but each
+// one is doing real screening. These explain why the visit exists and what is
+// done, so a "nothing happened" visit reads as the safety check it is.
+
+/** One thing checked at routine visits, from `fromWeek` (to `toWeek`) on. */
+export interface RoutineCheck {
+  id: string
+  /** 'both' = done in both countries; otherwise only in that country's care */
+  country: Country | 'both'
+  fromWeek: number
+  toWeek?: number
+  label: Bilingual
+  /** why it is checked — one or two plain sentences */
+  why: Bilingual
+  sourceIds?: string[]
+}
+
+/** What is specific to the check-up in one week. */
+export interface VisitNote {
+  week: number
+  /** short headline: what this visit is really about */
+  focus: Bilingual
+  /** why this visit exists at this point in pregnancy */
+  why: Bilingual
+  /** things to bring up / questions to ask (bilingual so they can be shown to a clinician) */
+  ask?: Bilingual[]
+  sourceIds?: string[]
+}
+
 // --- Side-by-side comparison ------------------------------------------------
 export interface CompareRow {
   id: string

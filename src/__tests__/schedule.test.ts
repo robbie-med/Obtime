@@ -13,6 +13,10 @@ import {
   visitWeeks,
   windowStatus,
   cadenceFor,
+  checksAt,
+  countriesAtWeek,
+  nextVisitWeek,
+  openAtVisit,
 } from '../lib/schedule'
 import { buildRows } from '../lib/timelineRows'
 import { parseDate } from '../lib/dating'
@@ -155,5 +159,47 @@ describe('week rows', () => {
     const weeks = rows.filter((r) => r.type === 'week').map((r) => (r as { week: number }).week)
     expect(Math.min(...weeks)).toBe(30)
     expect(rows[0]).toMatchObject({ type: 'trimester', tri: 3 })
+  })
+})
+
+describe('routine check-up content', () => {
+  const ids = (week: number, c: ('us' | 'kr')[]) => checksAt(week, c).map((x) => x.id)
+
+  it('adds checks as pregnancy progresses, per country', () => {
+    expect(ids(12, ['us'])).toEqual(expect.arrayContaining(['bp', 'weight', 'heartbeat', 'urine-us']))
+    expect(ids(12, ['us'])).not.toContain('fundal')
+    expect(ids(24, ['us'])).toContain('fundal')
+    expect(ids(24, ['kr'])).not.toContain('fundal') // growth by ultrasound in Korea
+    expect(ids(24, ['kr'])).toEqual(expect.arrayContaining(['urine-kr', 'ultrasound-kr']))
+    expect(ids(30, ['kr'])).not.toContain('nst-kr')
+    expect(ids(32, ['kr'])).toContain('nst-kr')
+    expect(ids(36, ['us', 'kr'])).toEqual(expect.arrayContaining(['position', 'labor-plan', 'warning-signs']))
+    expect(ids(37, ['us'])).not.toContain('warning-signs')
+    expect(ids(37, ['us'])).toContain('cervix-us')
+  })
+
+  it('picks whose care a week shows', () => {
+    expect(countriesAtWeek('both', 20, null)).toEqual(['us', 'kr'])
+    expect(countriesAtWeek('path', 20, 28)).toEqual(['us'])
+    expect(countriesAtWeek('path', 28, 28)).toEqual(['kr'])
+    expect(countriesAtWeek('kr', 20, 28)).toEqual(['kr'])
+  })
+
+  it('finds the next check-up', () => {
+    const cad = cadenceFor('us')
+    expect(nextVisitWeek(days(24, 4), cad)).toBe(24) // still in week 24
+    expect(nextVisitWeek(days(25, 0), cad)).toBe(28)
+    expect(nextVisitWeek(days(40, 6), cad)).toBe(40)
+    expect(nextVisitWeek(days(41, 0), cad)).toBeNull()
+  })
+
+  it('lists one-off items still open at a visit, not those listed that week', () => {
+    const us = timelineFor('us')
+    const at30 = openAtVisit(30, us).map((e) => e.id)
+    expect(at30).toContain('us-tdap') // 27–36, listed under 28
+    expect(at30).not.toContain('us-movement') // ongoing
+    expect(at30).not.toContain('us-anti-d') // condition-only
+    expect(openAtVisit(24, timelineFor('kr')).map((e) => e.id)).not.toContain('kr-iron') // not a clinic procedure
+    expect(openAtVisit(28, us).map((e) => e.id)).not.toContain('us-tdap') // shown in its own row
   })
 })

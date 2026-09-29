@@ -13,6 +13,8 @@ import { WEEK_MARKERS, OPTION_GROUPS } from '../data/timeline.shared'
 import { NUTRITION, NUTRITION_INTRO } from '../data/nutrition'
 import { EXERCISE, EXERCISE_INTRO } from '../data/exercise'
 import { INDEX } from '../data/indexTerms'
+import { ROUTINE_CHECKS, VISIT_NOTES } from '../data/visits'
+import { visitWeeks } from '../lib/schedule'
 import {
   eddFromLmp,
   gaFromEdd,
@@ -42,6 +44,8 @@ const ALL: unknown[] = [
   EXERCISE,
   EXERCISE_INTRO,
   INDEX,
+  ROUTINE_CHECKS,
+  VISIT_NOTES,
 ]
 
 type Visitor = (node: Record<string, unknown>, path: string) => void
@@ -230,5 +234,24 @@ describe('dating math (Naegele + GA + discrepancy)', () => {
     const r = resolveEdd(lmpEdd, usEdd, 8)
     expect(r.usedUltrasound).toBe(true)
     expect(r.edd.toISOString().slice(0, 10)).toBe('2026-10-20')
+  })
+})
+
+describe('routine check-ups', () => {
+  it('every check-up week (US and Korea) has a note explaining why', () => {
+    for (const cad of [US_CADENCE, KR_CADENCE]) {
+      const missing = visitWeeks(cad).filter((w) => !VISIT_NOTES.some((n) => n.week === w))
+      expect(missing, `weeks without a visit note: ${missing.join(', ')}`).toEqual([])
+    }
+  })
+  it('every check and visit note cites a source', () => {
+    const bad = [...ROUTINE_CHECKS.map((c) => [c.id, c.sourceIds] as const), ...VISIT_NOTES.map((n) => [`week ${n.week}`, n.sourceIds] as const)]
+      .filter(([, ids]) => !ids?.length)
+      .map(([id]) => id)
+    expect(bad).toEqual([])
+  })
+  it('check ids are unique and week ranges run forwards', () => {
+    expect(new Set(ROUTINE_CHECKS.map((c) => c.id)).size).toBe(ROUTINE_CHECKS.length)
+    for (const c of ROUTINE_CHECKS) expect(c.toWeek ?? 99).toBeGreaterThanOrEqual(c.fromWeek)
   })
 })

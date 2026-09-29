@@ -1068,6 +1068,157 @@ export const SOURCES: Source[] = [
     url: 'https://hqcenter.snu.ac.kr/archives/jiphyunjeon/%EC%9E%84%EC%82%B0%EB%B6%80%EB%A5%BC-%EC%9C%84%ED%95%9C-%EC%9A%B4%EB%8F%99-%EA%B0%80%EC%9D%B4%EB%93%9C%EB%9D%BC%EC%9D%B8-2',
     accessed: '2026-09-29',
   },
+  // --- Routine check-ups: verified 2026-09 ---
+  {
+    id: 'aafp-prenatal-2014',
+    label: {
+      en: 'AAFP 2014 — update on prenatal care (Doppler heart tones from 10–12 weeks)',
+      ko: 'AAFP 2014 — 산전 관리 업데이트 (10–12주부터 도플러 심음)',
+    },
+    org: 'American Academy of Family Physicians',
+    url: 'https://www.aafp.org/pubs/afp/issues/2014/0201/p199.html',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'aafp-prenatal-2023',
+    label: {
+      en: 'AAFP 2023 — prenatal care: an evidence-based approach',
+      ko: 'AAFP 2023 — 근거 기반 산전 관리',
+    },
+    org: 'American Academy of Family Physicians',
+    url: 'https://www.aafp.org/pubs/afp/issues/2023/0800/prenatal-care.html',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'acog-cc8',
+    label: {
+      en: 'ACOG Clinical Consensus No. 8 (2025) — tailored prenatal care delivery',
+      ko: 'ACOG 임상 합의 8호 (2025) — 맞춤형 산전 관리',
+    },
+    org: 'ACOG',
+    url: 'https://www.acog.org/clinical/clinical-guidance/clinical-consensus/articles/2025/04/tailored-prenatal-care-delivery-for-pregnant-individuals',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'uspstf-htn',
+    label: {
+      en: 'USPSTF 2023 — screening for hypertensive disorders of pregnancy (blood pressure at every visit)',
+      ko: 'USPSTF 2023 — 임신 중 고혈압 질환 선별 (매 진료 혈압 측정)',
+    },
+    org: 'U.S. Preventive Services Task Force',
+    url: 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/hypertensive-disorders-pregnancy-screening',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'acog-preeclampsia',
+    label: {
+      en: 'ACOG FAQ — preeclampsia and high blood pressure during pregnancy',
+      ko: 'ACOG 환자 안내 — 전자간증과 임신 중 고혈압',
+    },
+    org: 'ACOG',
+    url: 'https://www.acog.org/womens-health/faqs/preeclampsia-and-high-blood-pressure-during-pregnancy',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'anc-schedule-2013',
+    label: {
+      en: 'Hofmeyr & Hodnett, Reprod Health 2013 — why antenatal visits cluster in the third trimester',
+      ko: 'Hofmeyr & Hodnett, Reprod Health 2013 — 3삼분기에 산전 진료가 잦은 이유',
+    },
+    org: 'Reprod Health (NIH PMC)',
+    url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3639148/',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'acog-mental-health',
+    label: {
+      en: 'ACOG — perinatal mental health screening (CPG No. 4)',
+      ko: 'ACOG — 주산기 정신건강 선별 (임상지침 4호)',
+    },
+    org: 'ACOG',
+    url: 'https://www.acog.org/programs/perinatal-mental-health/patient-screening',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'acog-ipv',
+    label: {
+      en: 'ACOG Committee Opinion 518 — intimate partner violence (screen each trimester)',
+      ko: 'ACOG 위원회 의견 518 — 친밀한 관계 폭력 (삼분기마다 선별)',
+    },
+    org: 'ACOG',
+    url: 'https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2012/02/intimate-partner-violence',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'acog-preterm',
+    label: {
+      en: 'ACOG FAQ — preterm labor and birth (warning signs)',
+      ko: 'ACOG 환자 안내 — 조기 진통과 조산 (경고 증상)',
+    },
+    org: 'ACOG',
+    url: 'https://www.acog.org/womens-health/faqs/preterm-labor-and-birth',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'acog-labor',
+    label: {
+      en: 'ACOG FAQ — how to tell when labor begins',
+      ko: 'ACOG 환자 안내 — 진통 시작을 아는 법',
+    },
+    org: 'ACOG',
+    url: 'https://www.acog.org/womens-health/faqs/how-to-tell-when-labor-begins',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'medlineplus-3t',
+    label: {
+      en: 'MedlinePlus — third-trimester visits',
+      ko: 'MedlinePlus — 임신 3삼분기 진료',
+    },
+    org: 'U.S. National Library of Medicine',
+    url: 'https://medlineplus.gov/ency/patientinstructions/000558.htm',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'cervix-rct-1992',
+    label: {
+      en: 'McDuffie et al., Obstet Gynecol 1992 — weekly cervical exams from 37 weeks (no benefit)',
+      ko: 'McDuffie 외, Obstet Gynecol 1992 — 37주부터 매주 내진 (이점 없음)',
+    },
+    org: 'Obstet Gynecol (PubMed)',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/1731288/',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'snuh-preeclampsia',
+    label: {
+      en: 'SNUH — preeclampsia (blood pressure and urine at every visit)',
+      ko: '서울대학교병원 — 전자간증 (매 진료 혈압·소변검사)',
+    },
+    org: '서울대학교병원',
+    url: 'https://www.snuh.org/health/nMedInfo/nView.do?category=DIS&medid=AA000279',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'easylaw-depression',
+    label: {
+      en: 'Easy-to-find Law — pregnancy & postpartum depression support (보건소)',
+      ko: '찾기쉬운 생활법령정보 — 산전·산후우울증 지원 (보건소)',
+    },
+    org: '법제처 (easylaw.go.kr)',
+    url: 'https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=735&ccfNo=3&cciNo=5&cnpClsNo=2',
+    accessed: '2026-09-29',
+  },
+  {
+    id: 'seoul-counseling',
+    label: {
+      en: 'Seoul — infertility & depression counseling center (open to pregnant women)',
+      ko: '서울시 — 서울권역 난임·우울증 상담센터 (임신부 포함)',
+    },
+    org: '서울특별시',
+    url: 'https://seoul-agi.seoul.go.kr/index',
+    accessed: '2026-09-29',
+  },
 ]
 
 const SOURCE_IDS = new Set(SOURCES.map((s) => s.id))

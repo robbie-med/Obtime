@@ -8,6 +8,7 @@ import {
   cadenceFor,
   crossoverGa,
   defaultView,
+  countriesAtWeek,
   eventsForView,
   straddles,
   windowStatus,
@@ -21,6 +22,7 @@ import { useUi } from '../state/uiState'
 import { SectionCard } from './primitives'
 import { CrossoverPicker } from './timeline/CrossoverPicker'
 import { EventCard } from './timeline/EventCard'
+import { VisitCard } from './timeline/VisitCard'
 import { COUNTRY_COLOR, COUNTRY_NAME, KIND_META, KIND_ORDER, TIER_META } from './timeline/meta'
 
 const VIEWS: { id: TimelineView; en: string; ko: string }[] = [
@@ -238,6 +240,11 @@ export function Timeline() {
             <span className="text-accentink">{tc(c.every)}</span>
           </span>
         ))}
+        <span className="text-muted">
+          {lang === 'en'
+            ? '— each check-up below explains why it matters and what’s done.'
+            : '— 아래 각 정기 진료에 이유와 하는 일을 설명했습니다.'}
+        </span>
       </div>
 
       {/* ---- Any time / seasonal ---- */}
@@ -312,6 +319,7 @@ export function Timeline() {
               pathActive={pathActive}
               crossWeek={crossWeek}
               crossLabel={crossLabel}
+              events={events}
             />
           )
         })}
@@ -326,12 +334,15 @@ function WeekRowView({
   pathActive,
   crossWeek,
   crossLabel,
+  events,
 }: {
   row: WeekRow
   view: TimelineView
   pathActive: boolean
   crossWeek: number | null
   crossLabel: string
+  /** everything visible in the current view (for the check-up's "also open" list) */
+  events: TimelineEvent[]
 }) {
   const { tc, lang } = useUi()
   const { ga, edd } = useProfile()
@@ -366,7 +377,7 @@ function WeekRowView({
       )}
       <div className={clsx('grid gap-2 md:gap-3', twoCols ? 'md:grid-cols-[120px_1fr_1fr]' : 'md:grid-cols-[120px_1fr]')}>
         {/* Week gutter */}
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 md:block md:space-y-1 md:pt-1">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 md:row-span-4 md:block md:space-y-1 md:pt-1">
           <div className="text-sm font-bold tabular-nums text-ink">
             {lang === 'en' ? `Week ${row.week}` : `${row.week}주`}
           </div>
@@ -376,23 +387,21 @@ function WeekRowView({
               {lang === 'en' ? 'You are here' : '현재'} · {fmtGa(ga.weeks, ga.days, lang)}
             </div>
           )}
-          {row.visit && (
-            <div
-              className="inline-flex items-center gap-1 rounded-full bg-primarysoft px-2 py-0.5 text-[11px] font-medium text-accentink"
-              title={
-                lang === 'en'
-                  ? 'Routine check-up: weight, blood pressure, urine, baby’s heartbeat, and (from ~24w) fundal height. In Korea, usually an ultrasound too.'
-                  : '정기 진료: 체중, 혈압, 소변, 태아 심박, (약 24주부터) 자궁저 높이. 한국은 보통 초음파도 함께.'
-              }
-            >
-              <Stethoscope size={11} />
-              {lang === 'en' ? 'Check-up' : '정기 진료'}
-            </div>
-          )}
         </div>
 
+        {/* Routine check-up: why it happens and what is done */}
+        {row.visit && (
+          <div className={clsx(twoCols ? 'md:col-span-2 md:col-start-2' : 'md:col-start-2')}>
+            <VisitCard
+              week={row.week}
+              countries={countriesAtWeek(view, row.week, pathActive ? crossWeek : null)}
+              events={events}
+            />
+          </div>
+        )}
+
         {/* Items */}
-        {row.isNow && all.length === 0 && (
+        {row.isNow && all.length === 0 && !row.visit && (
           <NowSummary view={view} crossWeek={pathActive ? crossWeek : null} />
         )}
         {twoCols && all.length > 0 ? (
@@ -402,13 +411,13 @@ function WeekRowView({
               {all.map((ev) => card(ev, true))}
             </div>
             {(['us', 'kr'] as const).map((c) => (
-              <div key={c} className="hidden space-y-2 md:block">
+              <div key={c} className={clsx('hidden space-y-2 md:block', c === 'us' ? 'md:col-start-2' : 'md:col-start-3')}>
                 {row[c].map((ev) => card(ev, false))}
               </div>
             ))}
           </>
         ) : all.length > 0 ? (
-          <div className="space-y-2">{all.map((ev) => card(ev, view === 'path'))}</div>
+          <div className="space-y-2 md:col-start-2">{all.map((ev) => card(ev, view === 'path'))}</div>
         ) : null}
 
         {/* Week definitions (e.g. "39w0d · Full term") */}

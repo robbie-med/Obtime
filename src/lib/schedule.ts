@@ -5,10 +5,13 @@ import type {
   Country,
   GaWindow,
   Lang,
+  RoutineCheck,
   TimelineEvent,
   VisitCadence,
+  VisitNote,
   WeekMarker,
 } from '../data/types'
+import { ROUTINE_CHECKS, VISIT_NOTES } from '../data/visits'
 import { US_TIMELINE, US_CADENCE } from '../data/timeline.us'
 import { KR_TIMELINE, KR_CADENCE } from '../data/timeline.kr'
 import { WEEK_MARKERS, OPTION_GROUPS } from '../data/timeline.shared'
@@ -272,4 +275,58 @@ export function isEntryDone(entry: ChecklistEntry, checklist: Record<string, boo
 
 export function markersAt(week: number): WeekMarker[] {
   return WEEK_MARKERS.filter((m) => m.week === week)
+}
+
+// --- Routine check-ups ----------------------------------------------------------
+
+/** Which countries' care a given week shows in a view. */
+export function countriesAtWeek(view: TimelineView, week: number, crossWeek: number | null): Country[] {
+  if (view === 'us') return ['us']
+  if (view === 'kr') return ['kr']
+  if (view === 'path' && crossWeek != null) return [week < crossWeek ? 'us' : 'kr']
+  return ['us', 'kr']
+}
+
+/** Routine checks done at a check-up in this week, for these countries. */
+export function checksAt(week: number, countries: Country[]): RoutineCheck[] {
+  return ROUTINE_CHECKS.filter(
+    (c) =>
+      week >= c.fromWeek &&
+      (c.toWeek == null || week <= c.toWeek) &&
+      (c.country === 'both' || countries.includes(c.country)),
+  )
+}
+
+export function visitNote(week: number): VisitNote | undefined {
+  return VISIT_NOTES.find((n) => n.week === week)
+}
+
+/** The cadence segment a visit week belongs to ("every 4 weeks" …). */
+export function cadenceAt(week: number, cadence: VisitCadence[]): VisitCadence | undefined {
+  return cadence.find((c) => week >= c.from && week < c.to)
+}
+
+/** Kinds of item that are actually done in the clinic during a visit. */
+const AT_VISIT_KINDS = new Set(['lab', 'ultrasound', 'screening', 'diagnostic', 'vaccine'])
+
+/**
+ * One-off tests, scans and vaccines whose window is open at this visit but that
+ * are listed under another week — "can be done at this visit too".
+ */
+export function openAtVisit(week: number, events: TimelineEvent[]): TimelineEvent[] {
+  const day = week * 7
+  return events.filter(
+    (e) =>
+      !e.anytime &&
+      e.window.end != null &&
+      e.anchor !== week &&
+      e.tier !== 'indicated' &&
+      AT_VISIT_KINDS.has(e.kind) &&
+      windowStatus(e.window, day) === 'due',
+  )
+}
+
+/** The next routine check-up on or after today (null past the last one). */
+export function nextVisitWeek(gaTotalDays: number, cadence: VisitCadence[]): number | null {
+  return visitWeeks(cadence).find((w) => w * 7 + 6 >= gaTotalDays) ?? null
 }
