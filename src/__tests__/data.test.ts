@@ -9,6 +9,10 @@ import { PREP_QUESTIONS } from '../data/prepQuestions'
 import { RESOURCES } from '../data/resources'
 import { SOURCES, isKnownSource } from '../data/sources'
 import { CROSSOVER_STEPS, TRAVEL_TIMING } from '../data/logistics'
+import { WEEK_MARKERS, OPTION_GROUPS } from '../data/timeline.shared'
+import { NUTRITION, NUTRITION_INTRO } from '../data/nutrition'
+import { EXERCISE, EXERCISE_INTRO } from '../data/exercise'
+import { INDEX } from '../data/indexTerms'
 import {
   eddFromLmp,
   gaFromEdd,
@@ -31,6 +35,13 @@ const ALL: unknown[] = [
   SOURCES,
   CROSSOVER_STEPS,
   TRAVEL_TIMING,
+  WEEK_MARKERS,
+  OPTION_GROUPS,
+  NUTRITION,
+  NUTRITION_INTRO,
+  EXERCISE,
+  EXERCISE_INTRO,
+  INDEX,
 ]
 
 type Visitor = (node: Record<string, unknown>, path: string) => void
@@ -98,6 +109,10 @@ describe('unique ids within each collection', () => {
     PREP_QUESTIONS,
     RESOURCES,
     CROSSOVER_STEPS,
+    WEEK_MARKERS,
+    INDEX,
+    NUTRITION,
+    EXERCISE,
   }
   for (const [name, coll] of Object.entries(collections)) {
     it(`${name} has unique ids`, () => {
@@ -107,15 +122,78 @@ describe('unique ids within each collection', () => {
   }
 })
 
-describe('timeline anchors are valid', () => {
+const EVENTS = [...US_TIMELINE, ...KR_TIMELINE]
+
+describe('timeline windows are valid', () => {
   it('every event anchor sits within (or at) its window', () => {
     const bad: string[] = []
-    for (const ev of [...US_TIMELINE, ...KR_TIMELINE]) {
+    for (const ev of EVENTS) {
       const end = ev.window.end ?? 45
       if (ev.anchor < ev.window.start || ev.anchor > end) {
         bad.push(`${ev.id}: anchor ${ev.anchor} outside ${ev.window.start}–${ev.window.end ?? '∞'}`)
       }
     }
+    expect(bad, bad.join('\n')).toEqual([])
+  })
+
+  it('windows (and ideal sub-windows) run forwards, with days 0–6', () => {
+    const bad: string[] = []
+    for (const ev of EVENTS) {
+      for (const w of [ev.window, ev.ideal].filter(Boolean) as (typeof ev.window)[]) {
+        const from = w.start * 7 + (w.startDay ?? 0)
+        const to = w.end == null ? Infinity : w.end * 7 + (w.endDay ?? 6)
+        if (to < from) bad.push(`${ev.id}: window ends before it starts`)
+        for (const d of [w.startDay, w.endDay]) if (d != null && (d < 0 || d > 6)) bad.push(`${ev.id}: day ${d}`)
+        if (w.start < 0 || (w.end ?? 0) > 42) bad.push(`${ev.id}: week out of range`)
+      }
+      if (ev.ideal) {
+        const inside =
+          ev.ideal.start >= ev.window.start && (ev.window.end == null || (ev.ideal.end ?? 99) <= ev.window.end)
+        if (!inside) bad.push(`${ev.id}: ideal window outside full window`)
+      }
+    }
+    expect(bad, bad.join('\n')).toEqual([])
+  })
+
+  it('indicated items say who they are for; option groups exist', () => {
+    const bad: string[] = []
+    for (const ev of EVENTS) {
+      if (ev.tier === 'indicated' && !ev.condition) bad.push(`${ev.id}: indicated without condition`)
+      if (ev.optionGroup && !(ev.optionGroup in OPTION_GROUPS)) bad.push(`${ev.id}: unknown group ${ev.optionGroup}`)
+    }
+    expect(bad, bad.join('\n')).toEqual([])
+  })
+
+  it('every timeline item cites at least one source', () => {
+    const bad = EVENTS.filter((ev) => !ev.sourceIds?.length).map((ev) => ev.id)
+    expect(bad).toEqual([])
+  })
+
+  it('event ids are unique across both countries', () => {
+    const ids = EVENTS.map((e) => e.id)
+    expect(new Set(ids).size).toBe(ids.length)
+  })
+
+  it('pins guideline-exact windows', () => {
+    const w = (id: string) => EVENTS.find((e) => e.id === id)!.window
+    expect(w('us-gbs')).toEqual({ start: 36, end: 37 }) // ACOG: 36w0d–37w6d
+    expect(w('us-rsv')).toEqual({ start: 32, end: 36 }) // CDC: 32w0d–36w6d
+    expect(w('us-tdap')).toEqual({ start: 27, end: 36 })
+    expect(w('kr-maternity-leave')).toMatchObject({ start: 33, startDay: 5 }) // 280 − 44 days
+  })
+})
+
+describe('index links resolve', () => {
+  const ids = new Set(INDEX.map((e) => e.id))
+  it('every indexIds / related reference points at a real entry', () => {
+    const bad: string[] = []
+    const check = (where: string, list?: string[]) =>
+      list?.forEach((id) => !ids.has(id) && bad.push(`${where} → ${id}`))
+    EVENTS.forEach((e) => check(e.id, e.indexIds))
+    WEEK_MARKERS.forEach((m) => check(m.id, m.indexIds))
+    NUTRITION.forEach((s) => check(s.id, s.indexIds))
+    EXERCISE.forEach((s) => check(s.id, s.indexIds))
+    INDEX.forEach((e) => check(e.id, e.related))
     expect(bad, bad.join('\n')).toEqual([])
   })
 })

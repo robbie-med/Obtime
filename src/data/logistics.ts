@@ -118,10 +118,10 @@ export const CROSSOVER_STEPS: CrossoverStep[] = [
     phase: 'arrival',
     title: { en: 'Apply for the National Happiness Card voucher (국민행복카드)', ko: '국민행복카드 바우처 신청' },
     detail: {
-      en: 'With an OB’s confirmation of pregnancy, apply for the pregnancy & childbirth medical-expense voucher: about ₩1,000,000 for a single pregnancy and ₩1,400,000 for multiples (with an extra ₩200,000 in delivery-scarce regions). It offsets your out-of-pocket costs for prenatal care and delivery.',
-      ko: '산부인과의 임신 확인을 받아 임신·출산 진료비 바우처를 신청하세요: 단태아 약 100만원, 다태아 약 140만원(분만취약지 거주 시 20만원 추가). 산전 진료와 분만 본인부담금에 사용할 수 있습니다.',
+      en: 'With an OB’s confirmation of pregnancy, apply for the pregnancy & childbirth medical-expense voucher: ₩1,000,000 for one baby, or ₩1,000,000 per baby for multiples (twins ₩2,000,000), plus ₩200,000 in delivery-scarce regions. It offsets your out-of-pocket costs for prenatal care and delivery, and stays usable until 2 years after birth. It is for people covered by Korean national health insurance (as a member or dependent) — if you have been living abroad, check your eligibility with NHIS first.',
+      ko: '산부인과의 임신 확인을 받아 임신·출산 진료비 바우처를 신청하세요: 단태아 100만원, 다태아 태아당 100만원(쌍둥이 200만원), 분만취약지 거주 시 20만원 추가. 산전 진료와 분만 본인부담금에 쓰며 출산 후 2년까지 사용할 수 있습니다. 국민건강보험 가입자·피부양자 대상이므로, 해외 거주 후 귀국했다면 먼저 건보공단에 자격을 확인하세요.',
     },
-    sourceIds: ['nhis-voucher'],
+    sourceIds: ['mohw-voucher', 'mohw-multiples-2024'],
   },
   {
     id: 'x-choose-ob',

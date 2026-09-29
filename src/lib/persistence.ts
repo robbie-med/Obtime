@@ -32,8 +32,9 @@ export interface Profile {
   edd?: string // ISO date (derived or entered)
   datingMethod?: DatingMethod
   deliveryPlan: DeliveryPlan
-  // Crossover planning
-  flyGa?: number // gestational week the mom plans to travel
+  // Crossover planning: when the mom moves from US care to Korean care.
+  flyDate?: string // ISO date of the planned flight (preferred when a due date is set)
+  flyGa?: number // gestational week of the move (used when no due date is set)
   // Personalization inputs
   prePregnancyBmi?: number
   heightCm?: number

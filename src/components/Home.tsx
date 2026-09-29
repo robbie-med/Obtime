@@ -6,6 +6,9 @@ import {
   Languages,
   Activity,
   BookOpen,
+  Salad,
+  Dumbbell,
+  BookA,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useUi } from '../state/uiState'
@@ -16,10 +19,13 @@ import { RedFlags } from './RedFlags'
 import type { UiKey } from '../i18n/ui'
 
 const QUICK_LINKS: { id: string; label: UiKey; icon: ReactNode; blurbEn: string; blurbKo: string }[] = [
-  { id: 'timeline', label: 'navTimeline', icon: <CalendarRange size={18} />, blurbEn: 'US & Korea week-by-week, side by side', blurbKo: '미국·한국 주수별 나란히 보기' },
+  { id: 'timeline', label: 'navTimeline', icon: <CalendarRange size={18} />, blurbEn: 'Every week, with dates — US, Korea, or your US → Korea path', blurbKo: '주수별·날짜별 — 미국, 한국, 또는 미국 → 한국 경로' },
   { id: 'compare', label: 'navCompare', icon: <Columns2 size={18} />, blurbEn: 'Bilingual comparison of both systems', blurbKo: '두 제도의 이중언어 비교' },
   { id: 'checklist', label: 'navChecklist', icon: <ListChecks size={18} />, blurbEn: 'What’s due now, personalized', blurbKo: '지금 할 것 — 맞춤형' },
   { id: 'crossover', label: 'navCrossover', icon: <Plane size={18} />, blurbEn: 'Plan a delivery back in Korea', blurbKo: '한국에서의 분만 계획' },
+  { id: 'nutrition', label: 'navNutrition', icon: <Salad size={18} />, blurbEn: 'Fats & oils, vitamin D, magnesium, fish', blurbKo: '지방·기름, 비타민 D, 마그네슘, 생선' },
+  { id: 'exercise', label: 'navExercise', icon: <Dumbbell size={18} />, blurbEn: 'Strength training, safely, week by week', blurbKo: '안전한 근력 운동과 활동 가이드' },
+  { id: 'index', label: 'navIndex', icon: <BookA size={18} />, blurbEn: 'Every term explained, with links', blurbKo: '모든 용어 설명과 링크' },
   { id: 'cliniccard', label: 'navClinicCard', icon: <Languages size={18} />, blurbEn: 'Point-to-translate at the clinic', blurbKo: '진료실에서 가리켜 소통' },
   { id: 'trackers', label: 'navTrackers', icon: <Activity size={18} />, blurbEn: 'Weight, kicks, notes, countdown', blurbKo: '체중·태동·메모·카운트다운' },
 ]

@@ -1,8 +1,9 @@
 import { Plane, PackageCheck, Luggage, MapPin } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useUi } from '../state/uiState'
-import { useProfile } from '../state/profileState'
 import { SectionCard, SourceBadges } from './primitives'
+import { CrossoverPicker } from './timeline/CrossoverPicker'
+import { useNav } from '../state/navState'
 import {
   CROSSOVER_STEPS,
   TRAVEL_TIMING,
@@ -22,7 +23,7 @@ const PHASE_ORDER: CrossoverPhase[] = ['before', 'carry', 'arrival']
 
 export function Crossover() {
   const { tc, lang } = useUi()
-  const { profile, update, ga } = useProfile()
+  const { navigate } = useNav()
 
   const byPhase = (p: CrossoverPhase): CrossoverStep[] =>
     CROSSOVER_STEPS.filter((s) => s.phase === p)
@@ -42,44 +43,26 @@ export function Crossover() {
             : '두 나라에 걸쳐 진료를 이어가기 위한 단계별 계획입니다.'
         }
       >
-        {/* Optional: when do you plan to fly? */}
-        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl bg-primarysoft p-3">
-          <label className="text-sm font-medium text-accentink">
-            {lang === 'en' ? 'I plan to fly at (weeks):' : '출국 예정 주수:'}
-          </label>
-          <input
-            type="number"
-            min={4}
-            max={40}
-            value={profile.flyGa ?? ''}
-            onChange={(e) =>
-              update({ flyGa: e.target.value ? Number(e.target.value) : undefined })
-            }
-            className="w-20 rounded-lg border border-line bg-surface px-2 py-1 text-sm"
-            placeholder="—"
-          />
-          {profile.flyGa != null && ga && (
-            <span className="text-sm text-muted">
-              {profile.flyGa > ga.weeks
-                ? lang === 'en'
-                  ? `about ${profile.flyGa - ga.weeks} weeks from now`
-                  : `지금부터 약 ${profile.flyGa - ga.weeks}주 후`
-                : lang === 'en'
-                  ? 'that week has passed'
-                  : '이미 지난 주수입니다'}
-            </span>
-          )}
-          {profile.flyGa != null && (profile.flyGa >= 28 || (profile.flyGa >= 32)) && (
-            <span className="rounded-full bg-rose-accent/15 px-2 py-0.5 text-xs font-medium text-rose-accent">
-              {lang === 'en'
-                ? profile.flyGa >= 36
-                  ? 'Past many airlines’ single-pregnancy cutoff (~36w)'
-                  : 'A doctor’s letter is usually required after 28w'
-                : profile.flyGa >= 36
-                  ? '다수 항공사의 단태아 탑승 제한(약 36주)을 초과'
-                  : '28주 이후에는 보통 의사 소견서가 필요합니다'}
-            </span>
-          )}
+        {/* When do you move? Drives the US → Korea path on the timeline and checklist. */}
+        <div className="mb-4 space-y-2">
+          <CrossoverPicker />
+          <p className="text-xs text-muted">
+            {lang === 'en' ? (
+              <>
+                Your timeline and checklist follow this date: US care before it, Korean care after it.{' '}
+                <button onClick={() => navigate('timeline')} className="font-medium text-accentink underline">
+                  See your US → Korea timeline
+                </button>
+              </>
+            ) : (
+              <>
+                타임라인과 체크리스트가 이 날짜를 기준으로 이전은 미국, 이후는 한국 진료를 보여줍니다.{' '}
+                <button onClick={() => navigate('timeline')} className="font-medium text-accentink underline">
+                  미국 → 한국 타임라인 보기
+                </button>
+              </>
+            )}
+          </p>
         </div>
 
         {/* Travel timing guidance */}

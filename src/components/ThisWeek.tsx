@@ -3,22 +3,30 @@ import { useUi } from '../state/uiState'
 import { useProfile } from '../state/profileState'
 import { SectionCard, StatusPill, CountryTag } from './primitives'
 import { devForWeek } from '../data/development'
-import { checklistFor, countriesForPlan, windowStatus, formatWindow } from '../lib/schedule'
-import type { TimelineEvent } from '../data/types'
+import {
+  checklistEntries,
+  crossoverGa,
+  formatWindow,
+  isEntryDone,
+  optionGroup,
+  planEvents,
+  windowStatus,
+} from '../lib/schedule'
+import { useNav } from '../state/navState'
 
 export function ThisWeek() {
   const { t, tc, lang } = useUi()
-  const { ga, profile } = useProfile()
+  const { ga, edd, profile } = useProfile()
+  const { navigate } = useNav()
   if (!ga) return null
 
   const dev = devForWeek(ga.weeks)
-  const countries = countriesForPlan(profile.deliveryPlan)
+  const cross = crossoverGa(profile, edd)
 
-  // What's due right now across the relevant countries.
-  const dueNow: { ev: TimelineEvent }[] = countries
-    .flatMap((c) => checklistFor(c))
-    .filter((ev) => windowStatus(ev.window, ga.weeks) === 'due')
-    .map((ev) => ({ ev }))
+  // What's due right now for this plan (and not yet ticked off).
+  const dueNow = checklistEntries(planEvents(profile.deliveryPlan, cross?.weeks ?? null)).filter(
+    (e) => windowStatus(e.window, ga.totalDays) === 'due' && !isEntryDone(e, profile.checklist),
+  )
 
   return (
     <SectionCard
@@ -86,19 +94,25 @@ export function ThisWeek() {
           </p>
         ) : (
           <ul className="space-y-2">
-            {dueNow.map(({ ev }) => (
-              <li
-                key={ev.id}
-                className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface px-3 py-2"
-              >
+            {dueNow.map((entry) => (
+              <li key={entry.key}>
+                <button
+                  onClick={() => navigate('timeline', entry.events[0].id)}
+                  className="flex w-full items-center justify-between gap-3 rounded-lg border border-line bg-surface px-3 py-2 text-left hover:bg-surface2"
+                >
                 <div className="flex items-center gap-2">
-                  <CountryTag country={ev.country} />
-                  <span className="text-sm font-medium text-ink">{tc(ev.title)}</span>
+                  <CountryTag country={entry.country} />
+                  <span className="text-sm font-medium text-ink">
+                    {entry.group
+                      ? `${lang === 'en' ? 'Choose one: ' : '택1: '}${tc(optionGroup(entry.group)!.title)}`
+                      : tc(entry.events[0].title)}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-faint">{formatWindow(ev.window)}</span>
+                  <span className="text-xs tabular-nums text-faint">{formatWindow(entry.window, lang)}</span>
                   <StatusPill status="due">{t('dueNow')}</StatusPill>
                 </div>
+                </button>
               </li>
             ))}
           </ul>

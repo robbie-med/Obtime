@@ -50,11 +50,33 @@ export function SectionCard({
 export function SourceBadges({ ids }: { ids?: string[] }) {
   const { lang } = useUi()
   if (!ids || ids.length === 0) return null
+  // Several sources from one organization (e.g. two ACOG documents) get numbered
+  // chips so they don't look like duplicates; the tooltip names each document.
+  const orgCount = new Map<string, number>()
+  for (const id of ids) {
+    const org = getSource(id)?.org
+    if (org) orgCount.set(org, (orgCount.get(org) ?? 0) + 1)
+  }
+  const seen = new Map<string, number>()
   return (
     <span className="ml-1 inline-flex flex-wrap gap-1 align-baseline">
       {ids.map((id) => {
         const s = getSource(id)
         if (!s) return null
+        const n = (seen.get(s.org) ?? 0) + 1
+        seen.set(s.org, n)
+        const name = (orgCount.get(s.org) ?? 0) > 1 ? `${s.org} ${n}` : s.org
+        if (!s.url) {
+          return (
+            <span
+              key={id}
+              title={s.label[lang]}
+              className="rounded bg-surface2 px-1.5 py-0.5 text-[10px] font-medium text-muted ring-1 ring-line"
+            >
+              {name}
+            </span>
+          )
+        }
         return (
           <a
             key={id}
@@ -64,7 +86,7 @@ export function SourceBadges({ ids }: { ids?: string[] }) {
             title={`${s.org} — ${s.label[lang]}`}
             className="rounded bg-primarysoft px-1.5 py-0.5 text-[10px] font-medium text-accentink ring-1 ring-line hover:bg-primarysoft"
           >
-            {s.org}
+            {name}
           </a>
         )
       })}

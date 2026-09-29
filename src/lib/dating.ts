@@ -7,22 +7,36 @@
 const MS_PER_DAY = 86_400_000
 const GESTATION_DAYS = 280 // 40 weeks
 
+// All dates here are *calendar days* in the user's local time zone. A Date is
+// always normalised to local midnight, and day differences are counted on the
+// calendar (via UTC day numbers) so neither the time of day nor a DST shift nor
+// the user's UTC offset (e.g. Korea, UTC+9) can move a result by a day.
+
 export function parseDate(iso?: string): Date | null {
   if (!iso) return null
-  const d = new Date(iso + (iso.length === 10 ? 'T00:00:00' : ''))
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.slice(0, 10))
+  if (!m) return null
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))
   return isNaN(d.getTime()) ? null : d
 }
 
+/** Local calendar date as YYYY-MM-DD (never shifted to UTC). */
 export function toIso(d: Date): string {
-  return d.toISOString().slice(0, 10)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
 }
 
-function addDays(d: Date, days: number): Date {
-  return new Date(d.getTime() + days * MS_PER_DAY)
+export function addDays(d: Date, days: number): Date {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + days)
 }
 
-function daysBetween(a: Date, b: Date): number {
-  return Math.round((b.getTime() - a.getTime()) / MS_PER_DAY)
+/** Whole calendar days from a to b (b − a), independent of time of day. */
+export function daysBetween(a: Date, b: Date): number {
+  const ua = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())
+  const ub = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())
+  return Math.round((ub - ua) / MS_PER_DAY)
 }
 
 /** EDD from LMP via Naegele's rule (LMP + 280 days). */
@@ -47,8 +61,8 @@ export interface GestationalAge {
 
 /** Current gestational age given an EDD and a reference "today". */
 export function gaFromEdd(edd: Date, today = new Date()): GestationalAge {
-  const conceptionRef = lmpFromEdd(edd)
-  const totalDays = Math.max(0, daysBetween(conceptionRef, today))
+  const lmp = lmpFromEdd(edd)
+  const totalDays = Math.max(0, daysBetween(lmp, today))
   const weeks = Math.floor(totalDays / 7)
   const days = totalDays % 7
   const trimester: 1 | 2 | 3 = weeks < 14 ? 1 : weeks < 28 ? 2 : 3
@@ -96,6 +110,18 @@ export function resolveEdd(
       ? `Discrepancy ${discrepancyDays}d exceeds ${threshold}d at ${usGaWeeksAtScan}wk → ultrasound EDD used`
       : `Discrepancy ${discrepancyDays}d within ${threshold}d → LMP EDD kept`,
   }
+}
+
+/** Calendar date on which a given gestational age (weeks + days) falls. */
+export function dateAtGa(edd: Date, weeks: number, days = 0): Date {
+  return addDays(lmpFromEdd(edd), weeks * 7 + days)
+}
+
+/** Gestational age (weeks + days) on a given calendar date. */
+export function gaOnDate(edd: Date, date: Date): { weeks: number; days: number; totalDays: number } {
+  const totalDays = daysBetween(lmpFromEdd(edd), date)
+  const weeks = Math.floor(totalDays / 7)
+  return { weeks, days: totalDays - weeks * 7, totalDays }
 }
 
 /** Resolve the effective EDD from a profile's raw inputs. */

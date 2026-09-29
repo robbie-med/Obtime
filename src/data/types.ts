@@ -9,12 +9,16 @@ export type Country = 'us' | 'kr'
 export type Audience = 'mom' | 'clinician' | 'both'
 export type Lang = 'en' | 'ko'
 
-// A gestational-age window, expressed in weeks (inclusive start, inclusive end).
-// `end` omitted means "from `start` onward". Used to place events on the timeline
-// and to compute whether a checklist item is due / upcoming / past.
+// A gestational-age window in completed weeks (+ optional days).
+// Semantics are inclusive and day-precise: { start: 36, end: 37 } means
+// 36w0d through 37w6d. `startDay` / `endDay` narrow that when a guideline is
+// day-specific (e.g. NT 10w3d–13w6d → { start: 10, startDay: 3, end: 13 }).
+// `end` omitted means "from `start` until birth".
 export interface GaWindow {
   start: number
+  startDay?: number // default 0
   end?: number
+  endDay?: number // default 6
 }
 
 // --- Timeline ---------------------------------------------------------------
@@ -22,35 +26,70 @@ export type EventKind =
   | 'visit'
   | 'lab'
   | 'ultrasound'
-  | 'screening'
+  | 'screening' // risk estimate (e.g. NIPT, quad)
+  | 'diagnostic' // definitive test (CVS, amnio)
   | 'vaccine'
+  | 'medication' // supplements & preventive medicines (folate, iron, aspirin)
+  | 'monitoring' // ongoing checks (fundal height, kick counts, NST)
+  | 'admin' // paperwork, benefits, bookings
   | 'milestone'
+
+/**
+ * Who an item is for.
+ *  - routine: everyone gets it
+ *  - offered: offered to everyone, but it is your choice
+ *  - indicated: only if a condition applies (see `condition`)
+ */
+export type Tier = 'routine' | 'offered' | 'indicated'
 
 export interface TimelineEvent {
   id: string
   country: Country
   kind: EventKind
-  /** The single representative gestational week this event is placed at on the axis. */
+  /** The week row the item is listed under — the usual / ideal week. */
   anchor: number
-  /** True when the exact week is flexible (the axis dot is shown as "~" and the range in the tooltip). */
-  approx?: boolean
-  window: GaWindow // full recommended range (shown as detail / used for due-status)
+  /** The full recommended window. Drives the status (earlier / due now / coming up). */
+  window: GaWindow
+  /** The best part of the window, when narrower (e.g. Tdap: best 27–28w). */
+  ideal?: GaWindow
+  /** Not tied to a week (e.g. flu shot in season): shown in the "any time" strip. */
+  anytime?: boolean
+  /** Extra timing note shown next to the window (e.g. "Sep–Jan only"). */
+  timing?: Bilingual
+  tier: Tier
+  /** For `indicated` (and some `offered`) items: who it is for. */
+  condition?: Bilingual
+  /** Alternatives sharing an id are "choose one" options (see OPTION_GROUPS). */
+  optionGroup?: string
   title: Bilingual
-  summary: Bilingual // mom-facing plain language: what to expect at this point
-  clinicianDetail?: Bilingual // thresholds, guideline specifics — clinician mode only
-  routine: boolean // true = offered to everyone; false = indication-based
+  summary: Bilingual // mom-facing plain language: what to expect
+  clinicianDetail?: Bilingual // thresholds, guideline specifics — clinician mode
   sourceIds?: string[]
+  /** Index entries that explain the terms used here. */
+  indexIds?: string[]
 }
 
 // Recurring visit cadence — a rhythm over a span of weeks, not a single event.
-// Rendered as a labeled bracket alongside the timeline rather than as a point.
+// Expanded into one "check-up" marker per visit week on the timeline.
 export interface VisitCadence {
   country: Country
   from: number
   to: number
+  stepWeeks: number
   every: Bilingual // e.g. "every 4 weeks"
   detail: Bilingual // what happens at each of these visits
   sourceIds?: string[]
+}
+
+// A definition marker on the week axis shared by both countries
+// (e.g. "39w0d · Full term"), shown in the week's header.
+export interface WeekMarker {
+  id: string
+  week: number
+  label: Bilingual
+  detail: Bilingual
+  sourceIds?: string[]
+  indexIds?: string[]
 }
 
 // --- Side-by-side comparison ------------------------------------------------
@@ -114,6 +153,55 @@ export interface Resource {
   audience: Audience
   lang: Lang[]
   description: Bilingual
+}
+
+// --- Index (A–Z definitions) ------------------------------------------------
+export type IndexCategory =
+  | 'test'
+  | 'condition'
+  | 'care'
+  | 'medicine'
+  | 'benefit'
+  | 'nutrition'
+  | 'exercise'
+  | 'general'
+
+export interface IndexEntry {
+  id: string
+  term: Bilingual
+  /** Abbreviations and other names people search for (e.g. "NIPT", "니프티"). */
+  aka?: string[]
+  koRomanized?: string
+  category: IndexCategory
+  /** One-sentence definition. */
+  definition: Bilingual
+  /** Plain-language explanation: why it matters, what to expect. */
+  explanation: Bilingual
+  /** Clinician-level specifics (thresholds, guideline numbers). */
+  clinician?: Bilingual
+  sourceIds?: string[]
+  /** Other index entries worth reading next. */
+  related?: string[]
+  /** An in-app section that covers this in depth. */
+  section?: 'nutrition' | 'exercise' | 'crossover' | 'compare' | 'trackers'
+}
+
+// --- Long-form guides (Nutrition, Exercise) --------------------------------
+export type GuideBlock = { sourceIds?: string[]; clinicianOnly?: boolean } & (
+  | { type: 'text'; body: Bilingual }
+  | { type: 'bullets'; title?: Bilingual; items: Bilingual[] }
+  | { type: 'callout'; tone: 'tip' | 'warn' | 'info' | 'new'; title: Bilingual; body: Bilingual }
+  | { type: 'table'; caption?: Bilingual; head: Bilingual[]; rows: Bilingual[][] }
+  | { type: 'takeaway'; body: Bilingual }
+)
+
+export interface GuideSection {
+  id: string
+  title: Bilingual
+  /** one-line summary shown in the contents list */
+  lede: Bilingual
+  blocks: GuideBlock[]
+  indexIds?: string[]
 }
 
 // --- Citations ---------------------------------------------------------------
